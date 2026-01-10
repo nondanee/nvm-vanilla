@@ -111,18 +111,19 @@ const main = async () => {
         await promisify(fs.mkdir)(baseDir);
     } catch (_) {}
 
-    console.log(typeof process.argv[2])
+    // console.log(typeof process.argv[2]);
 
     switch (process.argv[2]) {
         case 'use': {
             break;
         }
         case 'install': {
+            await init(baseDir, process.argv[3]);
             break;
         }
         case '':
         case undefined: {
-
+            // check .nvmrc .node_version
         }
         default: {
 
