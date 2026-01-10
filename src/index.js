@@ -98,12 +98,16 @@ const init = async (baseBir, version) => {
     }));
 };
 
-const use = async (version) => {
+const use = async (baseDir, version) => {
     const workDir = path.join(baseDir, version, 'bin');
+    
+    let list = process.env.PATH.split(path.delimiter);
 
-    const list = process.env.PATH.split(path.delimiter);
+    list.filter(item => item.indexOf(baseDir) === -1);
 
-    process.stdout.write('export PATH=' + [workDir, ...list].join(path.delimiter) + '\n');
+    list.push(workDir);
+
+    process.stdout.write('export PATH=' + list.join(path.delimiter) + '\n');
 };
 
 const main = async () => {
