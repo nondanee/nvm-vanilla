@@ -5,7 +5,7 @@ const https = require('https');
 const { spawnSync } = require('child_process');
 // const { promisify } = require('util');
 
-const getNpmVersion = async (nodeVersion) => {
+const getNpmVersion = async (targetVersion) => {
     const response = await new Promise((resolve, reject) => {
         https.get('https://nodejs.org/dist/index.json')
             .on('response', resolve)
@@ -30,6 +30,8 @@ const getNpmVersion = async (nodeVersion) => {
         item.version === 'v' + targetVersion
     );
 
+    if (!target) throw 'NPM version not found';
+
     return target.npm;
 };
 
@@ -42,15 +44,24 @@ const install = async (cwd, version) => {
     const prefix = (process.platform == 'darwin' && process.arch == 'arm64') ? 'node-bin' : 'node';
 
     const npmCommand = platform == 'win' ? 'npm.cmd' : 'npm';
-    const packageName = [prefix, platform, arch].join('-');
 
-    spawnSync(npmCommand, ['install', '--no-save', packageName + '@' + version], {
+    const nodePackageName = [prefix, platform, arch].join('-');
+
+    spawnSync(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
         stdio: 'inherit',
-        shell: true,
+        // shell: true,
         cwd,
     });
 
-    const { version: nodeVersion } = require(path.join(cwd, 'node_modules', packageName, 'package.json'));
+    const { version: nodeVersion } = require(path.join(cwd, 'node_modules', nodePackageName, 'package.json'));
+
+    const npmVersion = await getNpmVersion(nodeVersion);
+
+    spawnSync(npmCommand, ['install', '--no-save', 'npm' + '@' + npmVersion], {
+        stdio: 'inherit',
+        // shell: true,
+        cwd,
+    });
 };
 
 const use = async (version) => {
