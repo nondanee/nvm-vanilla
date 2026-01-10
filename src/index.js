@@ -111,10 +111,6 @@ const main = async () => {
 
     const baseDir = path.join(homeDir, '.nvm2');
 
-    try {
-        await promisify(fs.mkdir)(baseDir);
-    } catch (_) {}
-
     // console.log(typeof process.argv[2]);
 
     switch (process.argv[2]) {
@@ -123,6 +119,9 @@ const main = async () => {
             break;
         }
         case 'install': {
+            try {
+                await promisify(fs.mkdir)(baseDir);
+            } catch (_) { }
             await init(baseDir, process.argv[3]);
             break;
         }
