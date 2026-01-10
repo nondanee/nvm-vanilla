@@ -3,7 +3,7 @@ const os = require('os');
 const path = require('path');
 const https = require('https');
 const { spawnSync } = require('child_process');
-// const { promisify } = require('util');
+const { promisify } = require('util');
 
 const getNpmVersion = async (targetVersion) => {
     const response = await new Promise((resolve, reject) => {
@@ -64,12 +64,33 @@ const install = async (cwd, version) => {
     });
 };
 
+const init = async (version) => {
+    const binDir = path.join(cwd, 'bin');
+
+    const templateDir = path.join(__dirname, 'template');
+
+    await promisify(fs.mkdir)(binDir);
+
+    const fileList = await promisify(fs.readdir)(templateDir);
+
+    await Promise.all(fileList.map(file => (
+        promisify(fs.copyFile)(
+            path.join(templateDir, file),
+            path.join(binDir, file)
+        )
+    )));
+};
+
 const use = async (version) => {
 
 };
 
-const main = () => {
+const installDir = '.nvm2';
 
+const main = () => {
+    const homeDir = os.homedir();
+
+    process.argv[2];
 };
 
 main();
