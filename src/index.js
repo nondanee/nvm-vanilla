@@ -2,7 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const https = require('https');
-const { spawnSync, execFile } = require('child_process');
+const { spawn } = require('child_process');
 const { promisify } = require('util');
 
 const getNpmVersion = async (targetVersion) => {
@@ -46,6 +46,20 @@ const getNodePackageName = () => {
     return [prefix, platform, arch].join('-');
 };
 
+const promisifySpawn = (command, args, options) => {
+    const child = spawn(command, args, {
+        stdio: 'inherit',
+        ...options,
+    });
+
+    return new Promise((resolve, reject) => {
+        child.on('exit', code => {
+            if (code === 0) resolve();
+            else reject(code);
+        });
+    });
+};
+
 const install = async (cwd, version) => {
     process.env.npm_config_global = 'false';
     process.env.npm_config_repository = '';
@@ -54,7 +68,7 @@ const install = async (cwd, version) => {
 
     const nodePackageName = getNodePackageName();
 
-    spawnSync(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
+    await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
         stdio: 'inherit',
         // shell: true,
         cwd,
@@ -65,7 +79,7 @@ const install = async (cwd, version) => {
 
     const npmVersion = await getNpmVersion(nodeVersion);
 
-    spawnSync(npmCommand, ['install', '--no-save', 'npm' + '@' + npmVersion], {
+    await promisifySpawn(npmCommand, ['install', '--no-save', 'npm' + '@' + npmVersion], {
         stdio: 'inherit',
         // shell: true,
         cwd,

@@ -1,3 +1,10 @@
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const https = require('https');
+const { spawn } = require('child_process');
+const { promisify } = require('util');
+
 const { init, use, list } = require('./index');
 
 const main = async () => {
