@@ -102,12 +102,32 @@ const use = async (version) => {
 
 };
 
-const installDir = '.nvm2';
-
-const main = () => {
+const main = async () => {
     const homeDir = os.homedir();
 
-    process.argv[2];
+    const baseDir = path.join(homeDir, '.nvm2');
+
+    try {
+        await promisify(fs.mkdir)(baseDir);
+    } catch (_) {}
+
+    console.log(typeof process.argv[2])
+
+    switch (process.argv[2]) {
+        case 'use': {
+            break;
+        }
+        case 'install': {
+            break;
+        }
+        case '':
+        case undefined: {
+
+        }
+        default: {
+
+        }
+    }
 };
 
 main();
