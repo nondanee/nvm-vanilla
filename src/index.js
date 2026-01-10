@@ -71,14 +71,16 @@ const init = async (version) => {
 
     await promisify(fs.mkdir)(binDir);
 
-    const fileList = await promisify(fs.readdir)(templateDir);
+    const nameList = await promisify(fs.readdir)(templateDir);
 
-    await Promise.all(fileList.map(file => (
-        promisify(fs.copyFile)(
-            path.join(templateDir, file),
-            path.join(binDir, file)
-        )
-    )));
+    await Promise.all(nameList.map(async name => {
+        const targetPath = path.join(binDir, name)
+        await promisify(fs.copyFile)(
+            path.join(templateDir, name),
+            targetPath,
+        );
+        await promisify(fs.chmod)(targetPath, 0o755);
+    }));
 };
 
 const use = async (version) => {
