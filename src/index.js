@@ -113,7 +113,7 @@ const use = async (baseDir, version) => {
 
     list.filter(item => item.indexOf(baseDir) === -1);
 
-    list.push(workDir);
+    list.unshift(workDir);
 
     process.stdout.write('export PATH=' + list.join(path.delimiter) + '\n');
 };
