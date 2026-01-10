@@ -2,7 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const https = require('https');
-const { spawnSync } = require('child_process');
+const { spawnSync, execFile } = require('child_process');
 const { promisify } = require('util');
 
 const getNpmVersion = async (targetVersion) => {
@@ -137,31 +137,45 @@ const main = async () => {
 
     const baseDir = path.join(homeDir, '.nvm2');
 
-    // console.log(typeof process.argv[2]);
+    let evalMode = false;
+    
+    const args = process.argv.slice(2).filter(_ => {
+        if (_ === '--eval') {
+            evalMode = true;
+            return false;
+        }
+        return true;
+    });
 
-    switch (process.argv[2]) {
+    const command = args[0];
+    const version = args[1];
+
+    switch (command) {
         case 'use': {
-            await use(baseDir, process.argv[3]);
+            if (!evalMode) return;
+            await use(baseDir, version);
             break;
         }
-        case 'install': {
-            try {
-                await promisify(fs.mkdir)(baseDir);
-            } catch (_) { }
-            await init(baseDir, process.argv[3]);
-            break;
-        }
-        case '':
-        case undefined: {
+        case 'env': {
+            if (!evalMode) return;
             // check .nvmrc .node_version
             break;
         }
+        case 'install': {
+            if (evalMode) return;
+            try {
+                await promisify(fs.mkdir)(baseDir);
+            } catch (_) { }
+            await init(baseDir, version);
+            break;
+        }
         case 'list': {
+            if (evalMode) return;
             await list(baseDir);
             break;
         }
         default: {
-
+            if (evalMode) return;
         }
     }
 };
