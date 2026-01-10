@@ -117,12 +117,19 @@ const use = async (baseDir, version) => {
     process.stdout.write('export PATH=' + list.join(path.delimiter) + '\n');
 };
 
-const list = async () => {
+const list = async (baseDir) => {
     const nameList = await promisify(fs.readdir)(baseDir);
 
+    const nodePackageName = getNodePackageName();
+
     const versionList = await Promise.all(nameList.map(async name => {
-        const packageFile = path.join(baseDir, name, 'node_modules', 'node', 'package.json');
-    }))
+        const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
+        const string = await promisify(fs.readFile)(packageFile, 'utf8');
+        const { version } = JSON.parse(string);
+        return 'node@' + name + ' (' + version + ')';
+    }));
+
+    return console.log(versionList.join('\n'));
 };
 
 const main = async () => {
@@ -150,6 +157,7 @@ const main = async () => {
             break;
         }
         case 'list': {
+            await list(baseDir);
             break;
         }
         default: {
