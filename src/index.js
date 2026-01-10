@@ -64,14 +64,29 @@ const install = async (cwd, version) => {
     });
 };
 
-const init = async (version) => {
-    const binDir = path.join(cwd, 'bin');
+const init = async (baseBir, version) => {
+    const workDir = path.join(baseBir, version);
 
+    await promisify(fs.mkdir)(workDir);
+
+    const binDir = path.join(workDir, 'bin');
     const templateDir = path.join(__dirname, 'template');
 
-    await promisify(fs.mkdir)(binDir);
+    const mkdirPromise = [
+        'bin',
+        'cache',
+        'prefix',
+    ].map(
+        name => promisify(fs.mkdir)(path.join(workDir, name))
+    );
 
-    const nameList = await promisify(fs.readdir)(templateDir);
+    const [
+        nameList,
+    ] = await Promise.all([
+        promisify(fs.readdir)(templateDir),
+        install(workDir, version),
+    ]
+        .concat(mkdirPromise))
 
     await Promise.all(nameList.map(async name => {
         const targetPath = path.join(binDir, name)
