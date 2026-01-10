@@ -115,7 +115,7 @@ const use = async (baseDir, version) => {
 
     list.unshift(workDir);
 
-    process.stdout.write('export PATH=' + list.join(path.delimiter) + '\n');
+    console.log('export PATH=' + list.join(path.delimiter));
 };
 
 const list = async (baseDir) => {
@@ -129,7 +129,7 @@ const list = async (baseDir) => {
         return 'node@' + name + ' (' + version + ')';
     }));
 
-    return console.log(versionList.join('\n'));
+    console.log(versionList.join('\n'));
 };
 
 const main = async () => {
