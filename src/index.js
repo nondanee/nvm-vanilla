@@ -99,7 +99,11 @@ const init = async (baseBir, version) => {
 };
 
 const use = async (version) => {
+    const workDir = path.join(baseDir, version, 'bin');
 
+    const list = process.env.PATH.split(path.delimiter);
+
+    process.stdout.write('export PATH=' + [workDir, ...list].join(path.delimiter) + '\n');
 };
 
 const main = async () => {
@@ -115,6 +119,7 @@ const main = async () => {
 
     switch (process.argv[2]) {
         case 'use': {
+            await use(baseDir, process.argv[3]);
             break;
         }
         case 'install': {
@@ -124,6 +129,10 @@ const main = async () => {
         case '':
         case undefined: {
             // check .nvmrc .node_version
+            break;
+        }
+        case 'source': {
+            break;
         }
         default: {
 
