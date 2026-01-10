@@ -60,7 +60,8 @@ const install = async (cwd, version) => {
         cwd,
     });
 
-    const { version: nodeVersion } = require(path.join(cwd, 'node_modules', nodePackageName, 'package.json'));
+    const packageFile = path.join(cwd, 'node_modules', nodePackageName, 'package.json');
+    const { version: nodeVersion } = await promisify(fs.readFile)(packageFile, 'utf8').then(JSON.parse);
 
     const npmVersion = await getNpmVersion(nodeVersion);
 
@@ -107,7 +108,7 @@ const init = async (baseBir, version) => {
 
 const use = async (baseDir, version) => {
     const workDir = path.join(baseDir, version, 'bin');
-    
+
     let list = process.env.PATH.split(path.delimiter);
 
     list.filter(item => item.indexOf(baseDir) === -1);
@@ -124,8 +125,7 @@ const list = async (baseDir) => {
 
     const versionList = await Promise.all(nameList.map(async name => {
         const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
-        const string = await promisify(fs.readFile)(packageFile, 'utf8');
-        const { version } = JSON.parse(string);
+        const { version } = await promisify(fs.readFile)(packageFile, 'utf8').then(JSON.parse);
         return 'node@' + name + ' (' + version + ')';
     }));
 
