@@ -35,17 +35,24 @@ const getNpmVersion = async (targetVersion) => {
     return target.npm;
 };
 
+const getNpmCommand = () => {
+    return process.platform == 'win32' ? 'npm.cmd' : 'npm';
+};
+
+const getNodePackageName = () => {
+    const platform = process.platform == 'win32' ? 'win' : process.platform;
+    const arch = platform == 'win' && process.arch == 'ia32' ? 'x86' : process.arch;
+    const prefix = (process.platform == 'darwin' && process.arch == 'arm64') ? 'node-bin' : 'node';
+    return [prefix, platform, arch].join('-');
+};
+
 const install = async (cwd, version) => {
     process.env.npm_config_global = 'false';
     process.env.npm_config_repository = '';
 
-    const platform = process.platform == 'win32' ? 'win' : process.platform;
-    const arch = platform == 'win' && process.arch == 'ia32' ? 'x86' : process.arch;
-    const prefix = (process.platform == 'darwin' && process.arch == 'arm64') ? 'node-bin' : 'node';
+    const npmCommand = getNpmCommand();
 
-    const npmCommand = platform == 'win' ? 'npm.cmd' : 'npm';
-
-    const nodePackageName = [prefix, platform, arch].join('-');
+    const nodePackageName = getNodePackageName();
 
     spawnSync(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
         stdio: 'inherit',
@@ -110,6 +117,14 @@ const use = async (baseDir, version) => {
     process.stdout.write('export PATH=' + list.join(path.delimiter) + '\n');
 };
 
+const list = async () => {
+    const nameList = await promisify(fs.readdir)(baseDir);
+
+    const versionList = await Promise.all(nameList.map(async name => {
+        const packageFile = path.join(baseDir, name, 'node_modules', 'node', 'package.json');
+    }))
+};
+
 const main = async () => {
     const homeDir = os.homedir();
 
@@ -134,7 +149,7 @@ const main = async () => {
             // check .nvmrc .node_version
             break;
         }
-        case 'source': {
+        case 'list': {
             break;
         }
         default: {
