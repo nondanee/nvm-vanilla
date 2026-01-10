@@ -1,7 +1,7 @@
 nvm2() {
-    cmd = "$(node index --eval "$@")"
+    cmd="$(node index --eval "$@")"
     if [ -n "$cmd" ]; then
-        eval "$cmd"
+        eval $cmd
     else
         node index "$@"
     fi
