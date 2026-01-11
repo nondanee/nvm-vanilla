@@ -91,7 +91,7 @@ const install = async (cwd, version) => {
 const init = async (baseBir, version) => {
     const workDir = path.join(baseBir, version);
 
-    await promisify(fs.mkdir)(workDir);
+    await promisify(fs.mkdir)(workDir); // rm
 
     const binDir = path.join(workDir, 'bin');
     const templateDir = path.join(__dirname, 'template');
@@ -122,9 +122,20 @@ const init = async (baseBir, version) => {
     }));
 };
 
-const use = async (baseDir, version) => {
+const use = async (baseDir, version, autoFlag) => {
     const workDir = path.join(baseDir, version, 'bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
+
+    let checkFlag = false;
+    try {
+     const stat = await promisify(fs.stat)(workDir);
+     checkFlag = stat.isDirectory();
+    } catch (_) {}
+
+    if (!checkFlag && !autoFlag) {
+        process.stderr.write('version not installed\n');
+        console.log(':');
+    }
 
     let list = process.env.PATH.split(path.delimiter);
 
