@@ -173,11 +173,6 @@ const init = async (baseDir, version) => {
 };
 
 const uninstall = async (baseDir, version) => {
-    if (!version) {
-        process.stderr.write("Please provide a version manually to the command.\n");
-        return;
-    }
-
     const workDir = path.join(baseDir, version);
 
     try {

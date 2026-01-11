@@ -25,6 +25,11 @@ const main = async () => {
     const command = args[0];
     const version = args[1];
 
+    const checkVersion = () => {
+        if (version) return true;
+        process.stderr.write("Please provide a version manually to the command.\n");
+    };
+
     switch (command) {
         case 'use': {
             if (!evalMode) return;
@@ -47,6 +52,7 @@ const main = async () => {
         }
         case 'uninstall': {
             if (evalMode) return;
+            if (!checkVersion()) return;
             await uninstall(baseDir, version);
             break;
         }
@@ -57,10 +63,10 @@ const main = async () => {
             break;
         }
         case 'exec': {
-
+            if (!checkVersion()) return;
         }
         case 'run': {
-            
+            if (!checkVersion()) return;
         }
         default:
     }
