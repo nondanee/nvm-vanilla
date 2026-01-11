@@ -148,8 +148,20 @@ const list = async (baseDir) => {
     console.log(versionList.join('\n'));
 };
 
+const detect = async () => {
+    const [
+        nodeVersion,
+        nvmrc,
+    ] = await Promise.all(
+        ['.node-version', '.nvmrc'].map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => {}))
+    );
+    
+    return String(nodeVersion || nvmrc || '').trim();
+};
+
 module.exports = {
     init,
     use,
     list,
+    detect,
 };
