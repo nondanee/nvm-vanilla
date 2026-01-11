@@ -1,3 +1,16 @@
+find_up() {
+    local path=$(pwd)
+    while [[ "$path" != "/" && "$path" != "$HOME" ]]; do
+        for file in "$@"; do
+            if [[ -f "$path/$file" ]]; then
+                echo "$path/$file"
+                return
+            fi
+        done
+        path=$(dirname "$path")
+    done
+}
+
 # 自动切换版本的钩子函数
 _nvm2_autoload_hook() {
     # 查找 .node-version 或 .nvmrc 文件
