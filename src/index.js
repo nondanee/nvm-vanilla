@@ -122,7 +122,7 @@ const init = async (baseBir, version) => {
     }));
 };
 
-const use = async (baseDir, version, autoFlag) => {
+const use = async (baseDir, version) => {
     const workDir = path.join(baseDir, version, 'bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
 
@@ -132,7 +132,7 @@ const use = async (baseDir, version, autoFlag) => {
      checkFlag = stat.isDirectory();
     } catch (_) {}
 
-    if (!checkFlag && !autoFlag) {
+    if (!checkFlag) {
         process.stderr.write("Can't find an installed Node version matching v" + version + ".\n");
         console.log(':');
         return;
