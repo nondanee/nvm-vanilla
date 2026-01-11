@@ -1,11 +1,5 @@
-# 设置 fnm 目录
-export FNM_DIR="$HOME/.fnm"
-
-# 核心函数：将 fnm 的 bin 路径添加到 PATH 最前面
-export PATH="$FNM_DIR/current/bin:$PATH"
-
 # 自动切换版本的钩子函数
-_fnm_autoload_hook() {
+_nvm2_autoload_hook() {
     # 查找 .node-version 或 .nvmrc 文件
     local node_version_file="$(find_up .node-version .nvmrc)"
     
@@ -22,11 +16,11 @@ _fnm_autoload_hook() {
 case "$SHELL" in
     *bash*)
         # bash: 使用 PROMPT_COMMAND
-        PROMPT_COMMAND="_fnm_autoload_hook; $PROMPT_COMMAND"
+        PROMPT_COMMAND="_nvm2_autoload_hook; $PROMPT_COMMAND"
         ;;
     *zsh*)
         # zsh: 使用 chpwd 或 precmd 钩子
         autoload -U add-zsh-hook
-        add-zsh-hook chpwd _fnm_autoload_hook
+        add-zsh-hook chpwd _nvm2_autoload_hook
         ;;
 esac
