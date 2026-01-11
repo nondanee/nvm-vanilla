@@ -133,8 +133,9 @@ const use = async (baseDir, version, autoFlag) => {
     } catch (_) {}
 
     if (!checkFlag && !autoFlag) {
-        process.stderr.write('version not installed\n');
+        process.stderr.write("Can't find an installed Node version matching v" + version + ".\n");
         console.log(':');
+        return;
     }
 
     let list = process.env.PATH.split(path.delimiter);
