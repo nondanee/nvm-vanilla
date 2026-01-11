@@ -112,7 +112,7 @@ const fill = async (version) => {
 
 const clear = async (dir) => {
     if (process.platform == 'win32') {
-        //
+        await promisify(execFile)('rd', ['/s', '/q', dir]);
     } else {
         await promisify(execFile)('rm', ['-rf', dir]);
     }
@@ -165,7 +165,7 @@ const init = async (baseDir, version) => {
 
     const linkDir = path.join(baseDir, specificNodeVersion);
 
-    await promisify(fs.link)(workDir, linkDir);
+    await promisify(fs.symlink)(workDir, linkDir, 'dir');
 };
 
 const use = async (baseDir, version) => {
