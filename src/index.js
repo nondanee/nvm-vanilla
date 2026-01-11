@@ -99,7 +99,19 @@ const detect = async () => {
     return String(nodeVersion || nvmrc || '').trim();
 };
 
+const fill = async (version) => {
+    if (!version) version = await detect();
+    if (!version) {
+        process.stderr.write("Can't find version in dotfiles. Please provide a version manually to the command.\n");
+        return;
+    }
+    return version.replace(/^v/i, '');
+};
+
 const init = async (baseDir, version) => {
+    version = await fill(version);
+    if (!version) return;
+
     try {
         await promisify(fs.mkdir)(baseDir);
     } catch (_) { }
@@ -138,6 +150,9 @@ const init = async (baseDir, version) => {
 };
 
 const use = async (baseDir, version) => {
+    version = await fill(version);
+    if (!version) return;
+
     const workDir = path.join(baseDir, version, 'bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
 
