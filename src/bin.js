@@ -7,9 +7,7 @@ const https = require('https');
 const { spawn } = require('child_process');
 const { promisify } = require('util');
 
-const autoloadString = require('./autoload');
-
-const { init, use, list } = require('./index');
+const { init, use, list, detect } = require('./index');
 
 const main = async () => {
     const homeDir = os.homedir();
@@ -35,10 +33,10 @@ const main = async () => {
             await use(baseDir, version);
             break;
         }
-        case 'env': {
+        case 'autoload': {
             if (!evalMode) return;
-            console.log(autoloadString);
-            break;
+            const targetVersion = await detect();
+            if (targetVersion) await use(baseDir, version);
         }
         case 'install': {
             if (evalMode) return;
