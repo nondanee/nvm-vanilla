@@ -3,8 +3,6 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const https = require('https');
-const { spawn } = require('child_process');
 const { promisify } = require('util');
 
 const { init, use, list, detect } = require('./index');
@@ -36,7 +34,11 @@ const main = async () => {
         case 'autoload': {
             if (!evalMode) return;
             const targetVersion = await detect();
-            if (targetVersion) await use(baseDir, version);
+            if (targetVersion) {
+                await use(baseDir, version);
+            } else {
+                console.log(':');
+            }
         }
         case 'install': {
             if (evalMode) return;
