@@ -89,6 +89,10 @@ const install = async (cwd, version) => {
 };
 
 const init = async (baseBir, version) => {
+    try {
+        await promisify(fs.mkdir)(baseDir);
+    } catch (_) { }
+
     const workDir = path.join(baseBir, version);
 
     await promisify(fs.mkdir)(workDir); // rm

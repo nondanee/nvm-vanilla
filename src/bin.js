@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { promisify } = require('util');
 
 const { init, use, list, detect } = require('./index');
 
@@ -44,9 +42,6 @@ const main = async () => {
         }
         case 'install': {
             if (evalMode) return;
-            try {
-                await promisify(fs.mkdir)(baseDir);
-            } catch (_) { }
             await init(baseDir, version);
             break;
         }
