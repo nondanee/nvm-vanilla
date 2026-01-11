@@ -6,8 +6,8 @@ _nvm2_autoload_hook() {
     if [ -f "$node_version_file" ]; then
         local node_version="$(cat "$node_version_file")"
         # 如果当前版本与文件指定版本不同，则切换
-        if [ "$(fnm current)" != "$node_version" ]; then
-            fnm use "$node_version" --silent-if-unchanged
+        if [ "$(nvm2 current)" != "$node_version" ]; then
+            nvm2 use "$node_version" --silent-if-unchanged
         fi
     fi
 }
