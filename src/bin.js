@@ -2,7 +2,7 @@
 
 const os = require('os');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawnSync, execFileSync } = require('child_process');
 
 const { init, use, list, detect, uninstall } = require('./index');
 
@@ -71,7 +71,7 @@ const main = async () => {
             process.env.PATH = PATH;
             const childArgs = args.slice(2);
             const childCommand = command === 'run' ? 'node' : childArgs.shift();
-            if (PATH) spawnSync(childCommand, childArgs);
+            if (PATH) spawnSync(childCommand, childArgs, { stdio: 'inherit' });
         }
         default:
     }
