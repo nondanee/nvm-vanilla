@@ -61,6 +61,8 @@ const promisifySpawn = (command, args, options) => {
 };
 
 const install = async (cwd, version) => {
+    // https://github.com/aredridel/node-bin-setup/blob/514d4aa42b58b10971845c420d34330c2414eef9/index.js#L10-L17
+
     process.env.npm_config_global = 'false';
     process.env.npm_config_repository = '';
 
