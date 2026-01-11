@@ -2,7 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const https = require('https');
-const { spawn } = require('child_process');
+const { spawn, execFile } = require('child_process');
 const { promisify } = require('util');
 
 const getNpmVersion = async (targetVersion) => {
@@ -86,6 +86,8 @@ const install = async (cwd, version) => {
         // shell: true,
         cwd,
     });
+
+    return nodeVersion;
 };
 
 const detect = async () => {
@@ -108,6 +110,14 @@ const fill = async (version) => {
     return version.replace(/^v/i, '');
 };
 
+const clear = async (dir) => {
+    if (process.platform == 'win32') {
+        //
+    } else {
+        await promisify(execFile)('rm', ['-rf', dir]);
+    }
+};
+
 const init = async (baseDir, version) => {
     version = await fill(version);
     if (!version) return;
@@ -118,7 +128,11 @@ const init = async (baseDir, version) => {
 
     const workDir = path.join(baseDir, version);
 
-    await promisify(fs.mkdir)(workDir); // rm
+    try {
+        await clear(workDir);
+    } catch (_) { }
+
+    await promisify(fs.mkdir)(workDir);
 
     const binDir = path.join(workDir, 'bin');
     const templateDir = path.join(__dirname, 'template');
@@ -133,6 +147,7 @@ const init = async (baseDir, version) => {
 
     const [
         nameList,
+        specificNodeVersion,
     ] = await Promise.all([
         promisify(fs.readdir)(templateDir),
         install(workDir, version),
@@ -147,6 +162,10 @@ const init = async (baseDir, version) => {
         );
         await promisify(fs.chmod)(targetPath, 0o755);
     }));
+
+    const linkDir = path.join(baseDir, specificNodeVersion);
+
+    await promisify(fs.link)(workDir, linkDir);
 };
 
 const use = async (baseDir, version) => {
