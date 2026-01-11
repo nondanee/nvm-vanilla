@@ -88,12 +88,23 @@ const install = async (cwd, version) => {
     });
 };
 
-const init = async (baseBir, version) => {
+const detect = async () => {
+    const [
+        nodeVersion,
+        nvmrc,
+    ] = await Promise.all(
+        ['.node-version', '.nvmrc'].map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => {}))
+    );
+    
+    return String(nodeVersion || nvmrc || '').trim();
+};
+
+const init = async (baseDir, version) => {
     try {
         await promisify(fs.mkdir)(baseDir);
     } catch (_) { }
 
-    const workDir = path.join(baseBir, version);
+    const workDir = path.join(baseDir, version);
 
     await promisify(fs.mkdir)(workDir); // rm
 
@@ -163,17 +174,6 @@ const list = async (baseDir) => {
     }));
 
     console.log(versionList.join('\n'));
-};
-
-const detect = async () => {
-    const [
-        nodeVersion,
-        nvmrc,
-    ] = await Promise.all(
-        ['.node-version', '.nvmrc'].map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => {}))
-    );
-    
-    return String(nodeVersion || nvmrc || '').trim();
 };
 
 module.exports = {
