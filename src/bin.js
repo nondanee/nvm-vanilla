@@ -2,8 +2,9 @@
 
 const os = require('os');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
-const { init, use, list, detect, reset, uninstall } = require('./index');
+const { init, use, list, detect, uninstall } = require('./index');
 
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
@@ -62,11 +63,15 @@ const main = async () => {
             await list(baseDir);
             break;
         }
-        case 'exec': {
-            if (!checkVersion()) return;
-        }
+        case 'exec':
         case 'run': {
+            if (evalMode) return;
             if (!checkVersion()) return;
+            const PATH = await use(baseDir, version, false);
+            process.env.PATH = PATH;
+            const childArgs = args.slice(2);
+            const childCommand = command === 'run' ? 'node' : childArgs.shift();
+            if (PATH) spawnSync(childCommand, childArgs);
         }
         default:
     }
