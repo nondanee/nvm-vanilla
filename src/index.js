@@ -165,6 +165,10 @@ const init = async (baseDir, version) => {
 
     const linkDir = path.join(baseDir, specificNodeVersion);
 
+    try {
+        await promisify(fs.unlink)(linkDir);
+    } catch (_) {}
+
     await promisify(fs.symlink)(workDir, linkDir, 'dir');
 };
 
