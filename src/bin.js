@@ -8,6 +8,8 @@ const { promisify } = require('util');
 const { init, use, list, detect } = require('./index');
 
 const main = async () => {
+    // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
+
     const homeDir = os.homedir();
 
     const baseDir = path.join(homeDir, '.nvm2');
@@ -35,7 +37,7 @@ const main = async () => {
             if (!evalMode) return;
             const targetVersion = await detect();
             if (targetVersion) {
-                await use(baseDir, version);
+                await use(baseDir, targetVersion);
             } else {
                 console.log(':');
             }
