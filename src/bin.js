@@ -50,14 +50,19 @@ const main = async () => {
             await uninstall(baseDir, version);
             break;
         }
+        case 'ls':
         case 'list': {
             if (evalMode) return;
             await list(baseDir);
             break;
         }
-        default: {
-            if (evalMode) return;
+        case 'exec': {
+
         }
+        case 'run': {
+            
+        }
+        default:
     }
 };
 
