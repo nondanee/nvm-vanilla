@@ -172,6 +172,19 @@ const init = async (baseDir, version) => {
     await promisify(fs.symlink)(workDir, linkDir, 'dir');
 };
 
+const uninstall = async (baseDir, version) => {
+    if (!version) {
+        process.stderr.write("Please provide a version manually to the command.\n");
+        return;
+    }
+
+    const workDir = path.join(baseDir, version);
+
+    try {
+        await clear(workDir);
+    } catch (_) { }
+};
+
 const use = async (baseDir, version) => {
     version = await fill(version);
     if (!version) return;
@@ -224,6 +237,7 @@ const list = async (baseDir) => {
 
 module.exports = {
     init,
+    uninstall,
     use,
     list,
     detect,

@@ -3,7 +3,7 @@
 const os = require('os');
 const path = require('path');
 
-const { init, use, list, detect, reset } = require('./index');
+const { init, use, list, detect, reset, uninstall } = require('./index');
 
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
@@ -48,6 +48,11 @@ const main = async () => {
         case 'install': {
             if (evalMode) return;
             await init(baseDir, version);
+            break;
+        }
+        case 'uninstall': {
+            if (evalMode) return;
+            await uninstall(baseDir, version);
             break;
         }
         case 'list': {
