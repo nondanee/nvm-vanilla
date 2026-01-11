@@ -217,13 +217,16 @@ const list = async (baseDir) => {
 
     const nodePackageName = getNodePackageName();
 
-    const versionList = await Promise.all(nameList.map(async name => {
+    let versionList = await Promise.all(nameList.map(async name => {
         const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
-        const { version } = await promisify(fs.readFile)(packageFile, 'utf8').then(JSON.parse);
+        const { version } = await promisify(fs.readFile)(packageFile, 'utf8').then(JSON.parse).catch(() => ({}));
+        if (!version) return;
         return 'node@' + name + ' (' + version + ')';
     }));
 
-    console.log(versionList.join('\n'));
+    versionList = versionList.filter(Boolean);
+
+    if (versionList.length) console.log(versionList.join('\n'));
 };
 
 module.exports = {
@@ -232,5 +235,4 @@ module.exports = {
     use,
     list,
     detect,
-    reset,
 };
