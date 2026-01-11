@@ -1,3 +1,4 @@
+module.exports = `
 find_up() {
     local path=$(pwd)
     while [[ "$path" != "/" && "$path" != "$HOME" ]]; do
@@ -37,3 +38,4 @@ case "$SHELL" in
         add-zsh-hook chpwd _nvm2_autoload_hook
         ;;
 esac
+`

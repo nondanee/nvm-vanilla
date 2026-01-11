@@ -5,6 +5,8 @@ const https = require('https');
 const { spawn } = require('child_process');
 const { promisify } = require('util');
 
+const autoloadString = require('./autoload');
+
 const { init, use, list } = require('./index');
 
 const main = async () => {
@@ -33,7 +35,7 @@ const main = async () => {
         }
         case 'env': {
             if (!evalMode) return;
-            // check .nvmrc .node_version
+            console.log(autoloadString);
             break;
         }
         case 'install': {
