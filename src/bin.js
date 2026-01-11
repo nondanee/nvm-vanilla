@@ -26,11 +26,6 @@ const main = async () => {
     const version = args[1];
 
     switch (command) {
-        case 'default': {
-            if (!evalMode) return;
-            await reset(baseDir);
-            break;            
-        }
         case 'use': {
             if (!evalMode) return;
             await use(baseDir, version);

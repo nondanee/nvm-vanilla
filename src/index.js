@@ -198,7 +198,7 @@ const use = async (baseDir, version) => {
      checkFlag = stat.isDirectory();
     } catch (_) {}
 
-    if (!checkFlag) {
+    if (!checkFlag && version !== 'system') {
         process.stderr.write("Can't find an installed Node version matching v" + version + ".\n");
         console.log(':');
         return;
@@ -208,15 +208,7 @@ const use = async (baseDir, version) => {
 
     list.filter(item => item.indexOf(baseDir) === -1);
 
-    list.unshift(workDir, prefixDir);
-
-    console.log('export PATH=' + list.join(path.delimiter));
-};
-
-const reset = (baseDir) => {
-    let list = process.env.PATH.split(path.delimiter);
-
-    list.filter(item => item.indexOf(baseDir) === -1);
+    if (version !== 'system') list.unshift(workDir, prefixDir);
 
     console.log('export PATH=' + list.join(path.delimiter));
 };
