@@ -180,7 +180,7 @@ const uninstall = async (baseDir, version) => {
     } catch (_) { }
 };
 
-const use = async (baseDir, version) => {
+const use = async (baseDir, version, evalFlag = true) => {
     version = await fill(version);
     if (!version) return;
 
@@ -195,7 +195,7 @@ const use = async (baseDir, version) => {
 
     if (!checkFlag && version !== 'system') {
         process.stderr.write("Can't find an installed Node version matching v" + version + ".\n");
-        console.log(':');
+        if (evalFlag) console.log(':');
         return;
     }
 
@@ -205,7 +205,11 @@ const use = async (baseDir, version) => {
 
     if (version !== 'system') list.unshift(workDir, prefixDir);
 
-    console.log('export PATH=' + list.join(path.delimiter));
+    const PATH = list.join(path.delimiter);
+
+    if (evalFlag) console.log('export PATH=' + PATH);
+
+    return PATH;
 };
 
 const list = async (baseDir) => {
