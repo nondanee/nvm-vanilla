@@ -124,12 +124,13 @@ const init = async (baseBir, version) => {
 
 const use = async (baseDir, version) => {
     const workDir = path.join(baseDir, version, 'bin');
+    const prefixDir = path.join(baseDir, version, 'prefix');
 
     let list = process.env.PATH.split(path.delimiter);
 
     list.filter(item => item.indexOf(baseDir) === -1);
 
-    list.unshift(workDir);
+    list.unshift(workDir, prefixDir);
 
     console.log('export PATH=' + list.join(path.delimiter));
 };
