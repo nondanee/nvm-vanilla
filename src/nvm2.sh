@@ -12,12 +12,10 @@ nvm2_autoload_dir=""
 _nvm2_autoload_hook() {
     local current_dir="$PWD"
     
-    # 如果目录没变且版本已缓存，跳过检查
     if [ "$current_dir" = "$nvm2_autoload_dir" ]; then
         return
     fi
 
-    # 缓存
     nvm2 autoload
 
     nvm2_autoload_dir="$current_dir"
