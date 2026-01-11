@@ -200,6 +200,14 @@ const use = async (baseDir, version) => {
     console.log('export PATH=' + list.join(path.delimiter));
 };
 
+const reset = (baseDir) => {
+    let list = process.env.PATH.split(path.delimiter);
+
+    list.filter(item => item.indexOf(baseDir) === -1);
+
+    console.log('export PATH=' + list.join(path.delimiter));
+};
+
 const list = async (baseDir) => {
     const nameList = await promisify(fs.readdir)(baseDir);
 
@@ -219,4 +227,5 @@ module.exports = {
     use,
     list,
     detect,
+    reset,
 };

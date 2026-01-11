@@ -3,7 +3,7 @@
 const os = require('os');
 const path = require('path');
 
-const { init, use, list, detect } = require('./index');
+const { init, use, list, detect, reset } = require('./index');
 
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
@@ -26,6 +26,11 @@ const main = async () => {
     const version = args[1];
 
     switch (command) {
+        case 'default': {
+            if (!evalMode) return;
+            await reset(baseDir);
+            break;            
+        }
         case 'use': {
             if (!evalMode) return;
             await use(baseDir, version);
