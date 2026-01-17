@@ -1,6 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const http = require('http');
 const https = require('https');
 const { spawn, execFile } = require('child_process');
 const { promisify } = require('util');
@@ -62,8 +63,8 @@ const getNodeVersion = async (semanticVersion) => {
 
 const fetchJsonFile = async (fileUrl) => {
     const response = await new Promise((resolve, reject) => {
-        // https://cdn.npmmirror.com/binaries/node/index.json
-        https.get('https://nodejs.org/dist/index.json')
+        const { get } = /^http:\/\//.test(fileUrl) ? http : https;
+        get(fileUrl)
             .on('response', resolve)
             .on('error', reject);
     });
@@ -83,6 +84,10 @@ const fetchJsonFile = async (fileUrl) => {
 };
 
 const getNpmVersion = async (nodeVersion) => {
+    const list = await Promise.race([
+        fetchJsonFile('https://cdn.npmmirror.com/binaries/node/index.json'),
+        fetchJsonFile('https://nodejs.org/dist/index.json'),
+    ]);
 
     const target = list.find(item =>
         item.version === nodeVersion ||
