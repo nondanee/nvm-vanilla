@@ -94,8 +94,35 @@ const install = async (cwd, version) => {
     return nodeVersion;
 };
 
-const override = async (npmDir) => {
+const override = async (workDir) => {
+    const npmDir = path.join(workDir, 'node_modules', 'npm');
+    const { bin } = path.join(npmDir, 'package.json');
 
+    const fileList = [];
+
+    if (typeof bin === 'string') {
+        fileList.push(bin);
+    } else if (bin && typeof bin === 'object') {
+        for (const key in bin) {
+            fileList.push(bin[key]);
+        }
+    }
+
+    const promiseList = fileList.map(async relativeFilePath => {
+        relativeFilePath = relativeFilePath.replace(/^\//, '');
+        const relativeLibPath = path.posix.relative(path.posix.dirname(relativeFilePath), '../../');
+        const prefix = `
+process.env.NPM_CONFIG_PREFIX = process.env.NPM_CONFIG_PREFIX
+    || require("path").resolve(__dirname, ${JSON.stringify(relativeLibPath)}, "prefix");
+process.env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE
+    || require("path").resolve(__dirname, ${JSON.stringify(relativeLibPath)}, "cache");
+        `;
+        const filePath = path.join(npmDir, relativeFilePath);
+        const content = await promisify(fs.readFile)(filePath, 'utf-8');
+        await promisify(fs.writeFile)(filePath, prefix + content);
+    });
+
+    return Promise.all(promiseList);
 };
 
 const detect = async () => {
@@ -164,6 +191,8 @@ const init = async (baseDir, version) => {
         install(workDir, version),
         mkdirPromise,
     ]);
+
+    await override(workDir)
 
     // await Promise.all(nameList.map(async name => {
     //     const targetPath = path.join(binDir, name)
