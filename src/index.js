@@ -184,7 +184,8 @@ const corrent = async (version) => {
     if (!version) {
         throw 'cannot detect node version';
     }
-    return version.replace(/^v/i, '');
+    version = version.replace(/^v/i, '');
+    return getLocalNodeVersion(version);
 };
 
 const clear = async (dir) => {
@@ -203,6 +204,10 @@ const getLocalNodeVersion = async (baseDir, semanticVersion) => {
     } catch (_) {
         throw `no local node version "${semanticVersion}"`;
     }
+};
+
+const which = (baseDir, semanticVersion) => {
+
 };
 
 const alias = async (baseDir, version, targetVersion) => {
@@ -304,7 +309,10 @@ const uninstall = async (baseDir, version) => {
 };
 
 const use = async (baseDir, version, evalFlag = true) => {
-    version = await corrent(version);
+    if (version !== 'system') {
+        version = await corrent(version);
+        version = await getLocalNodeVersion(version);   
+    }
 
     // const workDir = path.join(baseDir, version, 'bin');
 
@@ -314,15 +322,15 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     const resetFlag = version === 'system'
 
-    let checkFlag = false;
-    try {
-        const stat = await promisify(fs.stat)(workDir);
-        checkFlag = stat.isDirectory();
-    } catch (_) { }
+    // let checkFlag = false;
+    // try {
+    //     const stat = await promisify(fs.stat)(workDir);
+    //     checkFlag = stat.isDirectory();
+    // } catch (_) { }
 
-    if (!checkFlag && !resetFlag) {
-        throw `node version "${version}" not installed`;
-    }
+    // if (!checkFlag && !resetFlag) {
+    //     throw `node version "${version}" not installed`;
+    // }
 
     let list = process.env.PATH.split(path.delimiter);
 
