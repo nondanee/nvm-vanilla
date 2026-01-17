@@ -94,6 +94,10 @@ const install = async (cwd, version) => {
     return nodeVersion;
 };
 
+const override = async (npmDir) => {
+
+};
+
 const detect = async () => {
     const [
         nodeVersion,
@@ -141,13 +145,16 @@ const init = async (baseDir, version) => {
     // const binDir = path.join(workDir, 'bin');
     // const templateDir = path.join(__dirname, 'template');
 
-    const mkdirPromise = [
+    const mkdirPromise = Promise.all([
         'bin',
         'cache',
         'prefix',
     ].map(
         name => promisify(fs.mkdir)(path.join(workDir, name))
-    );
+    ))
+        .then(() => (
+            promisify(fs.mkdir)(path.join(workDir, 'prefix', 'lib'))
+        ));
 
     const [
         // nameList,
@@ -155,10 +162,8 @@ const init = async (baseDir, version) => {
     ] = await Promise.all([
         // promisify(fs.readdir)(templateDir),
         install(workDir, version),
-    ]
-        .concat(mkdirPromise));
-
-    await promisify(fs.mkdir)(path.join(workDir, 'prefix', 'lib'));
+        mkdirPromise,
+    ]);
 
     // await Promise.all(nameList.map(async name => {
     //     const targetPath = path.join(binDir, name)
