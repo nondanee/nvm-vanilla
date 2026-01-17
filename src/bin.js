@@ -64,11 +64,11 @@ const main = async () => {
         case 'exec':
         case 'run': {
             if (!checkVersion()) return;
-            const PATH = await use(baseDir, version, false);
-            process.env.PATH = PATH;
+            const env = await use(baseDir, version, false);
+            Object.assign(process.env, env);
             const childArgs = args.slice(2);
             const childCommand = command === 'run' ? 'node' : childArgs.shift();
-            if (PATH) spawnSync(childCommand, childArgs, { stdio: 'inherit' });
+            spawnSync(childCommand, childArgs, { stdio: 'inherit' });
             break;
         }
         default:
