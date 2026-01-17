@@ -152,7 +152,9 @@ const init = async (baseDir, version) => {
         promisify(fs.readdir)(templateDir),
         install(workDir, version),
     ]
-        .concat(mkdirPromise))
+        .concat(mkdirPromise));
+
+    await promisify(fs.mkdir)(path.join(workDir, 'prefix', 'lib'));
 
     await Promise.all(nameList.map(async name => {
         const targetPath = path.join(binDir, name)
