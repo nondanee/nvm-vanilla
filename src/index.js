@@ -176,7 +176,7 @@ const detect = async (baseDir) => {
         ]
             .map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => { }))
             .concat([
-                baseDir && getLocalNodeVersion(baseDir, 'default'),
+                baseDir && getLocalNodeVersion(baseDir, 'default').catch(() => { }),
             ])
     );
 
@@ -320,7 +320,7 @@ const which = async (baseDir, name) => {
 const use = async (baseDir, version, evalFlag = true) => {
     if (version !== 'system') {
         version = await corrent(version);
-        version = await getLocalNodeVersion(baseDir, version);   
+        version = await getLocalNodeVersion(baseDir, version);
     }
 
     // const workDir = path.join(baseDir, version, 'bin');
@@ -350,7 +350,7 @@ const use = async (baseDir, version, evalFlag = true) => {
     const env = {};
 
     env.PATH = list.join(path.delimiter);
-    
+
     env.NPM_CONFIG_PREFIX = prefixDir;
     env.NPM_CONFIG_CACHE = cacheDir;
 
