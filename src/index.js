@@ -201,11 +201,13 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     let list = process.env.PATH.split(path.delimiter);
 
-    list.filter(item => item.indexOf(baseDir) === -1);
+    list = list.filter(item => item.indexOf(baseDir) === -1);
 
     if (version !== 'system') list.unshift(workDir, prefixDir);
 
     const PATH = list.join(path.delimiter);
+
+    // process.stderr.write('Now using node v' + version + '\n');
 
     if (evalFlag) console.log('export PATH=' + PATH);
 
