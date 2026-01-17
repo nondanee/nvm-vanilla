@@ -6,6 +6,8 @@ const { spawnSync, execFileSync } = require('child_process');
 
 const { init, use, list, detect, uninstall } = require('./index');
 
+const evalCommandSet = new Set(['use', 'autoload'])
+
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
 
@@ -26,6 +28,8 @@ const main = async () => {
     const command = args[0];
     const version = args[1];
 
+    if (!(evalMode ^ evalCommandSet.has(command))) return;
+
     const checkVersion = () => {
         if (version) return true;
         process.stderr.write("Please provide a version manually to the command.\n");
@@ -33,12 +37,10 @@ const main = async () => {
 
     switch (command) {
         case 'use': {
-            if (!evalMode) return;
             await use(baseDir, version);
             break;
         }
         case 'autoload': {
-            if (!evalMode) return;
             const targetVersion = await detect();
             if (targetVersion) {
                 await use(baseDir, targetVersion);
@@ -47,25 +49,21 @@ const main = async () => {
             }
         }
         case 'install': {
-            if (evalMode) return;
             await init(baseDir, version);
             break;
         }
         case 'uninstall': {
-            if (evalMode) return;
             if (!checkVersion()) return;
             await uninstall(baseDir, version);
             break;
         }
         case 'ls':
         case 'list': {
-            if (evalMode) return;
             await list(baseDir);
             break;
         }
         case 'exec':
         case 'run': {
-            if (evalMode) return;
             if (!checkVersion()) return;
             const PATH = await use(baseDir, version, false);
             process.env.PATH = PATH;
