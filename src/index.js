@@ -111,14 +111,14 @@ const override = async (workDir) => {
     const promiseList = fileList.map(async relativeFilePath => {
         relativeFilePath = relativeFilePath.replace(/^\//, '');
         const relativeLibPath = path.posix.relative(
-            path.join(npmDir, path.posix.dirname(relativeFilePath)),
+            path.join(npmDir, relativeFilePath),
             workDir,
         );
         const prefix = `
 process.env.NPM_CONFIG_PREFIX = process.env.NPM_CONFIG_PREFIX
-    || require("path").resolve(__dirname, ${JSON.stringify(relativeLibPath)}, "prefix");
+    || require("path").resolve(__filename, ${JSON.stringify(relativeLibPath)}, "prefix");
 process.env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE
-    || require("path").resolve(__dirname, ${JSON.stringify(relativeLibPath)}, "cache");
+    || require("path").resolve(__filename, ${JSON.stringify(relativeLibPath)}, "cache");
         `;
         const filePath = path.join(npmDir, relativeFilePath);
         const content = await promisify(fs.readFile)(filePath, 'utf-8');
