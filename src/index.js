@@ -164,19 +164,23 @@ process.env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE
 };
 */
 
-const detect = async () => {
+const detect = async (baseDir) => {
     const [
         nodeVersion,
         nvmrc,
+        defaultVersion,
     ] = await Promise.all(
         [
             '.node-version',
             '.nvmrc',
         ]
             .map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => { }))
+            .concat([
+                baseDir && getLocalNodeVersion(baseDir, 'default'),
+            ])
     );
 
-    return String(nodeVersion || nvmrc || '').trim();
+    return String(nodeVersion || nvmrc || defaultVersion || '').trim();
 };
 
 const corrent = async (version) => {
@@ -195,13 +199,13 @@ const clear = async (dir) => {
     }
 };
 
-const getLocalNodeVersion = async (baseDir, semanticVersion) => {
-    const packageFile = path.join(baseDir, semanticVersion, 'node_modules', nodePackageName, 'package.json');
+const getLocalNodeVersion = async (baseDir, name) => {
+    const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
     try {
         const { version } = await readJsonFile(packageFile);
         return version;
     } catch (_) {
-        throw `no local node version "${semanticVersion}"`;
+        throw `no local node version "${name}"`;
     }
 };
 
@@ -307,8 +311,8 @@ const uninstall = async (baseDir, version) => {
     } catch (_) { }
 };
 
-const which = async (baseDir, semanticVersion) => {
-    const version = await getLocalNodeVersion(baseDir, semanticVersion);
+const which = async (baseDir, name) => {
+    const version = await getLocalNodeVersion(baseDir, name);
     const workDir = path.join(baseDir, version, 'node_modules', '.bin');
     return workDir;
 };

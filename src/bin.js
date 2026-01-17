@@ -39,7 +39,7 @@ const main = async () => {
             break;
         }
         case 'autoload': {
-            const targetVersion = await detect();
+            const targetVersion = await detect(baseDir);
             if (targetVersion) {
                 await use(baseDir, targetVersion);
             } else {
