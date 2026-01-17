@@ -195,8 +195,18 @@ const clear = async (dir) => {
     }
 };
 
+const getLocalNodeVersion = async (baseDir, semanticVersion) => {
+    
+};
+
 const alias = async (baseDir, version, targetVersion) => {
     const linkDir = path.join(baseDir, version);
+
+    if (!targetVersion) {
+        await getLocalNodeVersion(baseDir, version);
+        return;
+    }
+
     const sourceDir = path.join(baseDir, targetVersion);
 
     try {

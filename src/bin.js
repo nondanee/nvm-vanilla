@@ -4,7 +4,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 
-const { init, use, list, detect, uninstall } = require('./index');
+const { init, use, list, detect, uninstall, alias } = require('./index');
 
 const evalCommandSet = new Set(['use', 'autoload']);
 
@@ -47,10 +47,15 @@ const main = async () => {
             }
             break;
         }
+        case 'alias': {
+            await alias(baseDir, args[1], args[2]);
+            break;
+        }
         case 'install': {
             await init(baseDir, version);
             break;
         }
+        case 'unalias':
         case 'uninstall': {
             if (!checkVersion()) return;
             await uninstall(baseDir, version);
