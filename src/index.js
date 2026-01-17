@@ -74,14 +74,21 @@ const install = async (cwd, version) => {
 
     const nodePackageName = getNodePackageName();
 
-    await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
-        stdio: 'inherit',
-        // shell: true,
-        cwd,
-    });
+    const npmViewOutput = await promisify(execFile)('npm', ['view', nodePackageName + '@' + version, 'version', '--json']).catch(() => {});
 
-    const packageFile = path.join(cwd, 'node_modules', nodePackageName, 'package.json');
-    const { version: nodeVersion } = await readJsonFile(packageFile);
+    let nodeVersion;
+    try {
+        nodeVersion = JSON.parse(npmViewOutput.stdout).pop();
+    } catch (_) {}
+
+    // await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
+    //     stdio: 'inherit',
+    //     // shell: true,
+    //     cwd,
+    // });
+
+    // const packageFile = path.join(cwd, 'node_modules', nodePackageName, 'package.json');
+    // const { version: nodeVersion } = await readJsonFile(packageFile);
 
     const npmVersion = await getNpmVersion(nodeVersion);
 
