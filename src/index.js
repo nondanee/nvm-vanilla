@@ -5,41 +5,16 @@ const https = require('https');
 const { spawn, execFile } = require('child_process');
 const { promisify } = require('util');
 
-const getNpmVersion = async (targetVersion) => {
-    const response = await new Promise((resolve, reject) => {
-        https.get('https://nodejs.org/dist/index.json')
-            .on('response', resolve)
-            .on('error', reject);
-    });
-
-    const chunkList = [];
-
-    await new Promise((resolve, reject) => {
-        response
-            .on('error', reject)
-            .on('end', resolve)
-            .on('data', (chunk) => {
-                chunkList.push(chunk);
-            });
-    });
-
-    const list = JSON.parse(Buffer.concat(chunkList));
-
-    const target = list.find(item =>
-        item.version === targetVersion ||
-        item.version === 'v' + targetVersion
-    );
-
-    if (!target) throw 'NPM version not found';
-
-    return target.npm;
-};
-
 const getNpmCommand = () => {
     return process.platform == 'win32' ? 'npm.cmd' : 'npm';
 };
 
 const npmCommand = getNpmCommand();
+
+// https://github.com/aredridel/node-bin-setup/blob/514d4aa42b58b10971845c420d34330c2414eef9/index.js#L10-L17
+
+process.env.npm_config_global = 'false';
+process.env.npm_config_repository = '';
 
 const getNodePackageName = () => {
     const platform = process.platform == 'win32' ? 'win' : process.platform;
@@ -85,12 +60,37 @@ const getNodePackageVersion = async (version) => {
     return nodeVersion;
 };
 
+const getNpmVersion = async (targetVersion) => {
+    const response = await new Promise((resolve, reject) => {
+        https.get('https://nodejs.org/dist/index.json')
+            .on('response', resolve)
+            .on('error', reject);
+    });
+
+    const chunkList = [];
+
+    await new Promise((resolve, reject) => {
+        response
+            .on('error', reject)
+            .on('end', resolve)
+            .on('data', (chunk) => {
+                chunkList.push(chunk);
+            });
+    });
+
+    const list = JSON.parse(Buffer.concat(chunkList));
+
+    const target = list.find(item =>
+        item.version === targetVersion ||
+        item.version === 'v' + targetVersion
+    );
+
+    if (!target) throw 'NPM version not found';
+
+    return target.npm;
+};
+
 const install = async (cwd, version) => {
-    // https://github.com/aredridel/node-bin-setup/blob/514d4aa42b58b10971845c420d34330c2414eef9/index.js#L10-L17
-
-    process.env.npm_config_global = 'false';
-    process.env.npm_config_repository = '';
-
     // await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
     //     stdio: 'inherit',
     //     // shell: true,
