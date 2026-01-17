@@ -208,7 +208,7 @@ const getLocalNodeVersion = async (baseDir, semanticVersion) => {
 const alias = async (baseDir, version, targetVersion) => {
     const linkDir = path.join(baseDir, version);
 
-    const resetFlag = targetVersion === 'none';
+    const resetFlag = targetVersion === 'none' && false;
 
     if (!targetVersion) {
         const nodeVersion = await getLocalNodeVersion(baseDir, version);
