@@ -222,8 +222,12 @@ const init = async (baseDir, version) => {
 
     // await override(workDir);
 
+    const supportNameList = await promisify(fs.readdir)(path.join(workDir, 'node_modules', '.bin'));
+
+    const supportNameSet = new Set(supportNameList.map(_ => _.split('.')[0]));
+
     await Promise.all(nameList.map(async name => {
-        const targetPath = path.join(binDir, name)
+        const targetPath = path.join(binDir, name);
         await promisify(fs.copyFile)(
             path.join(templateDir, name),
             targetPath,
