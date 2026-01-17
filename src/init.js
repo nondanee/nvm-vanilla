@@ -1,19 +1,10 @@
 const fs = require('fs');
 
-// if (!/node_modules/.test(__dirname)) {
-//     process.exit();
-// }
-
 const init = () => {
     if (process.platform === 'win32') {
 
     } else {
-        fs.appendFileSync('~/.bashrc',
-`
-NVM_VANILLA_DIR="${__dirname}"
-[ -s "$NVM_VANILLA_DIR/init.sh" ] && \. "$NVM_VANILLA_DIR/init.sh"
-`
-        );
+        fs.appendFileSync('~/.bashrc', '\neval "$(nvm-vanilla env --use-on-cd)"');
     }
 };
 
