@@ -184,8 +184,7 @@ const corrent = async (version) => {
     if (!version) {
         throw 'cannot detect node version';
     }
-    version = version.replace(/^v/i, '');
-    return getLocalNodeVersion(version);
+    return version.replace(/^v/i, '');
 };
 
 const clear = async (dir) => {
@@ -311,7 +310,7 @@ const uninstall = async (baseDir, version) => {
 const use = async (baseDir, version, evalFlag = true) => {
     if (version !== 'system') {
         version = await corrent(version);
-        version = await getLocalNodeVersion(version);   
+        version = await getLocalNodeVersion(baseDir, version);   
     }
 
     // const workDir = path.join(baseDir, version, 'bin');
