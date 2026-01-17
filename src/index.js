@@ -50,12 +50,12 @@ const getNodeVersion = async (semanticVersion) => {
         'version',
         '--json',
     ])
-        .catch(() => {});
+        .catch(() => { });
 
     let nodeVersion;
     try {
         nodeVersion = JSON.parse(npmViewOutput.stdout).pop();
-    } catch (_) {}
+    } catch (_) { }
 
     return nodeVersion;
 };
@@ -160,9 +160,9 @@ const detect = async () => {
         nodeVersion,
         nvmrc,
     ] = await Promise.all(
-        ['.node-version', '.nvmrc'].map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => {}))
+        ['.node-version', '.nvmrc'].map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => { }))
     );
-    
+
     return String(nodeVersion || nvmrc || '').trim();
 };
 
@@ -188,7 +188,7 @@ const alias = async (baseDir, version, targetVersion) => {
 
     try {
         await promisify(fs.unlink)(linkDir);
-    } catch (_) {}
+    } catch (_) { }
 
     await promisify(fs.symlink)(sourceDir, linkDir, 'dir');
 };
@@ -203,7 +203,11 @@ const init = async (baseDir, version) => {
 
     const nodeVersion = await getNodeVersion(version);
 
-    if (!nodeVersion) throw `no satisified node version "${version}"`;
+    if (nodeVersion) {
+        console.log(`prepare to install node version "${nodeVersion}"`);
+    } else {
+        throw `no satisified node version "${version}"`;
+    }
 
     const workDir = path.join(baseDir, nodeVersion);
 
@@ -272,9 +276,9 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     let checkFlag = false;
     try {
-     const stat = await promisify(fs.stat)(workDir);
-     checkFlag = stat.isDirectory();
-    } catch (_) {}
+        const stat = await promisify(fs.stat)(workDir);
+        checkFlag = stat.isDirectory();
+    } catch (_) { }
 
     if (!checkFlag && version !== 'system') {
         throw `node version "${version}" not installed`;
