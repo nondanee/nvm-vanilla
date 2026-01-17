@@ -208,11 +208,13 @@ const getLocalNodeVersion = async (baseDir, semanticVersion) => {
 const alias = async (baseDir, version, targetVersion) => {
     const linkDir = path.join(baseDir, version);
 
+    const resetFlag = targetVersion === 'none';
+
     if (!targetVersion) {
         const nodeVersion = await getLocalNodeVersion(baseDir, version);
         console.log(nodeVersion);
         return;
-    } else {
+    } else if (!resetFlag) {
         await getLocalNodeVersion(baseDir, targetVersion); // check
     }
 
@@ -222,7 +224,7 @@ const alias = async (baseDir, version, targetVersion) => {
         await promisify(fs.unlink)(linkDir);
     } catch (_) { }
 
-    await promisify(fs.symlink)(sourceDir, linkDir, 'dir');
+    if (!resetFlag) await promisify(fs.symlink)(sourceDir, linkDir, 'dir');
 };
 
 const init = async (baseDir, version) => {
@@ -310,13 +312,15 @@ const use = async (baseDir, version, evalFlag = true) => {
     const prefixDir = path.join(baseDir, version, 'prefix');
     const cacheDir = path.join(baseDir, version, 'cache');
 
+    const resetFlag = version === 'system'
+
     let checkFlag = false;
     try {
         const stat = await promisify(fs.stat)(workDir);
         checkFlag = stat.isDirectory();
     } catch (_) { }
 
-    if (!checkFlag && version !== 'system') {
+    if (!checkFlag && !resetFlag) {
         throw `node version "${version}" not installed`;
     }
 
@@ -324,7 +328,7 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     list = list.filter(item => item.indexOf(baseDir) === -1);
 
-    if (version !== 'system') list.unshift(workDir, prefixDir);
+    if (!resetFlag) list.unshift(workDir, prefixDir);
 
     const env = {};
 
