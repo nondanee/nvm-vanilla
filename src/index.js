@@ -212,6 +212,8 @@ const alias = async (baseDir, version, targetVersion) => {
         const nodeVersion = await getLocalNodeVersion(baseDir, version);
         console.log(nodeVersion);
         return;
+    } else {
+        await getLocalNodeVersion(baseDir, targetVersion); // check
     }
 
     const sourceDir = path.join(baseDir, targetVersion);
