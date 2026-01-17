@@ -333,9 +333,9 @@ const use = async (baseDir, version, evalFlag = true) => {
                 command + '\n'
             );
 
-            process.stderr.write(
-                command + '\n'
-            );
+            // process.stderr.write(
+            //     command + '\n'
+            // );
         }
     }
 
