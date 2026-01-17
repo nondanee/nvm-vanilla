@@ -1,9 +1,9 @@
 nvm() {
-    local cmd="$(command nvm --eval "$@")"
+    local cmd="$(command nvm-vanilla --eval "$@")"
     if [ -n "$cmd" ]; then
         eval $cmd
     else
-        command nvm "$@"
+        command nvm-vanilla "$@"
     fi
 }
 
