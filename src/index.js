@@ -46,6 +46,10 @@ const getNodePackageName = () => {
     return [prefix, platform, arch].join('-');
 };
 
+const readJsonFile = (filePath) => (
+    promisify(fs.readFile)(filePath, 'utf8').then(JSON.parse)
+);
+
 const promisifySpawn = (command, args, options) => {
     const child = spawn(command, args, {
         stdio: 'inherit',
@@ -77,7 +81,7 @@ const install = async (cwd, version) => {
     });
 
     const packageFile = path.join(cwd, 'node_modules', nodePackageName, 'package.json');
-    const { version: nodeVersion } = await promisify(fs.readFile)(packageFile, 'utf8').then(JSON.parse);
+    const { version: nodeVersion } = await readJsonFile(packageFile);
 
     const npmVersion = await getNpmVersion(nodeVersion);
 
@@ -223,7 +227,7 @@ const list = async (baseDir) => {
 
     let versionList = await Promise.all(nameList.map(async name => {
         const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
-        const { version } = await promisify(fs.readFile)(packageFile, 'utf8').then(JSON.parse).catch(() => ({}));
+        const { version } = await readJsonFile(packageFile).catch(() => ({}));
         if (!version) return;
         return 'node@' + name + ' (' + version + ')';
     }));
