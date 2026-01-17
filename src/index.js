@@ -60,8 +60,9 @@ const getNodeVersion = async (semanticVersion) => {
     return nodeVersion;
 };
 
-const getNpmVersion = async (nodeVersion) => {
+const fetchJsonFile = async (fileUrl) => {
     const response = await new Promise((resolve, reject) => {
+        // https://cdn.npmmirror.com/binaries/node/index.json
         https.get('https://nodejs.org/dist/index.json')
             .on('response', resolve)
             .on('error', reject);
@@ -78,7 +79,10 @@ const getNpmVersion = async (nodeVersion) => {
             });
     });
 
-    const list = JSON.parse(Buffer.concat(chunkList));
+    return JSON.parse(Buffer.concat(chunkList));
+};
+
+const getNpmVersion = async (nodeVersion) => {
 
     const target = list.find(item =>
         item.version === nodeVersion ||
