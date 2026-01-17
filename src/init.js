@@ -7,12 +7,12 @@ const init = async () => {
     if (process.platform === 'win32') {
         await promisify(fs.appendFile)(
             path.resolve(os.homedir(), 'Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1'),
-            '\nnvm-vanilla env --eval | Out-String | Invoke-Expression',
+            '\nnvm-vanilla --eval env | Out-String | Invoke-Expression',
         )
     } else {
         await promisify(fs.appendFile)(
             path.resolve(os.homedir(), '.bashrc'),
-            '\neval "$(nvm-vanilla env --eval)"',
+            '\neval "$(nvm-vanilla --eval env)"',
         );
     }
 };
