@@ -182,7 +182,7 @@ const clear = async (dir) => {
     }
 };
 
-const alias = async (version, targetVersion) => {
+const alias = async (baseDir, version, targetVersion) => {
     const linkDir = path.join(baseDir, version);
     const sourceDir = path.join(baseDir, targetVersion);
 
@@ -251,7 +251,7 @@ const init = async (baseDir, version) => {
     }));
 
     if (version !== nodeVersion) {
-        await alias(version, nodeVersion);
+        await alias(baseDir, version, nodeVersion);
     }
 };
 
