@@ -219,7 +219,6 @@ const init = async (baseDir, version) => {
 
     const [
         nameList,
-        specificNodeVersion,
     ] = await Promise.all([
         promisify(fs.readdir)(templateDir),
         install(workDir, version),
@@ -241,13 +240,15 @@ const init = async (baseDir, version) => {
         await promisify(fs.chmod)(targetPath, 0o755);
     }));
 
-    const linkDir = path.join(baseDir, specificNodeVersion);
+    if (version !== nodeVersion) {
+        const linkDir = path.join(baseDir, version);
 
-    try {
-        await promisify(fs.unlink)(linkDir);
-    } catch (_) {}
+        try {
+            await promisify(fs.unlink)(linkDir);
+        } catch (_) {}
 
-    await promisify(fs.symlink)(workDir, linkDir, 'dir');
+        await promisify(fs.symlink)(workDir, linkDir, 'dir');
+    }
 };
 
 const uninstall = async (baseDir, version) => {
