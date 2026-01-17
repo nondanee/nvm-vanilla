@@ -68,18 +68,28 @@ const promisifySpawn = (command, args, options) => {
     });
 };
 
-const install = async (cwd, version) => {
-    // https://github.com/aredridel/node-bin-setup/blob/514d4aa42b58b10971845c420d34330c2414eef9/index.js#L10-L17
-
-    process.env.npm_config_global = 'false';
-    process.env.npm_config_repository = '';
-
-    const npmViewOutput = await promisify(execFile)('npm', ['view', nodePackageName + '@' + version, 'version', '--json']).catch(() => {});
+const getNodePackageVersion = async (version) => {
+    const npmViewOutput = await promisify(execFile)('npm', [
+        'view',
+        nodePackageName + '@' + version,
+        'version',
+        '--json',
+    ])
+        .catch(() => {});
 
     let nodeVersion;
     try {
         nodeVersion = JSON.parse(npmViewOutput.stdout).pop();
     } catch (_) {}
+
+    return nodeVersion;
+};
+
+const install = async (cwd, version) => {
+    // https://github.com/aredridel/node-bin-setup/blob/514d4aa42b58b10971845c420d34330c2414eef9/index.js#L10-L17
+
+    process.env.npm_config_global = 'false';
+    process.env.npm_config_repository = '';
 
     // await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
     //     stdio: 'inherit',
