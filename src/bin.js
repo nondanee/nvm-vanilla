@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 
+const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { promisify } = require('util');
 const { spawnSync, execFileSync } = require('child_process');
 
 const { init: install, use, list, detect, uninstall, alias, which } = require('./index');
 
 const init = require('./init');
 
-const evalCommandSet = new Set(['use', 'autoload']);
+const evalCommandSet = new Set(['use', 'autoload', 'env']);
 
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
@@ -36,6 +38,14 @@ const main = async () => {
     };
 
     switch (command) {
+        case 'env': {
+            const content = await promisify(fs.readFile)(path.resolve(
+                __dirname,
+                process.platform == 'win32' ? 'nvm.ps1' : 'nvm.sh'
+            ), 'utf-8');
+            process.stdin.write(content);
+            break;
+        }
         case 'use': {
             await use(baseDir, version);
             break;
