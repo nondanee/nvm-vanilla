@@ -205,10 +205,6 @@ const getLocalNodeVersion = async (baseDir, semanticVersion) => {
     }
 };
 
-const which = (baseDir, semanticVersion) => {
-
-};
-
 const alias = async (baseDir, version, targetVersion) => {
     const linkDir = path.join(baseDir, version);
 
@@ -307,6 +303,12 @@ const uninstall = async (baseDir, version) => {
     } catch (_) { }
 };
 
+const which = async (baseDir, semanticVersion) => {
+    const version = await getLocalNodeVersion(baseDir, semanticVersion);
+    const workDir = path.join(baseDir, version, 'node_modules', '.bin');
+    return workDir;
+};
+
 const use = async (baseDir, version, evalFlag = true) => {
     if (version !== 'system') {
         version = await corrent(version);
@@ -394,4 +396,5 @@ module.exports = {
     list,
     detect,
     alias,
+    which,
 };

@@ -4,7 +4,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 
-const { init, use, list, detect, uninstall, alias } = require('./index');
+const { init, use, list, detect, uninstall, alias, which } = require('./index');
 
 const evalCommandSet = new Set(['use', 'autoload']);
 
@@ -47,6 +47,13 @@ const main = async () => {
             }
             break;
         }
+        case 'which':
+        case 'where': {
+            if (!checkVersion()) return;
+            const dir = await which(baseDir, version);
+            console.log(dir);
+            break;
+        }
         case 'alias': {
             await alias(baseDir, args[1], args[2]);
             break;
@@ -74,6 +81,10 @@ const main = async () => {
             const childArgs = args.slice(2);
             const childCommand = command === 'run' ? 'node' : childArgs.shift();
             spawnSync(childCommand, childArgs, { stdio: 'inherit' });
+            break;
+        }
+        case 'current': {
+            spawnSync('node', ['--version'], { stdio: 'inherit' });
             break;
         }
         default:
