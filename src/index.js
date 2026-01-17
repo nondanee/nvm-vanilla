@@ -186,7 +186,7 @@ const init = async (baseDir, version) => {
 
     const nodeVersion = await getNodeVersion(version);
 
-    if (!nodeVersion) throw `no satisify node version "${version}"`;
+    if (!nodeVersion) throw `no satisified node version "${version}"`;
 
     const workDir = path.join(baseDir, nodeVersion);
 
