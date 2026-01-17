@@ -324,9 +324,16 @@ const use = async (baseDir, version, evalFlag = true) => {
             let command = key === 'PATH'
                 ? `export ${key}=${value}`
                 : `export ${key}=\${${key}:-${value}}`;
+
+            if (process.platform === 'win32') {
+                command = key === 'PATH'
+                    ? `set ${key}=${value}`
+                    : `if not defined ${key} set ${key}=${value}`;
+            }
+
             process.stdout.write(
                 command + '\n'
-            )
+            );
         }
     }
 
