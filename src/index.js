@@ -319,12 +319,12 @@ const use = async (baseDir, version, evalFlag = true) => {
     if (evalFlag) {
         for (const key in env) {
             const value = env[key];
-            let command = key === 'PATH'
+            let command = (key === 'PATH' || true)
                 ? `export ${key}=${value}`
                 : `export ${key}=\${${key}:-${value}}`;
 
             if (process.platform === 'win32') {
-                command = key === 'PATH'
+                command = (key === 'PATH' || true)
                     ? `set ${key}=${value}`
                     : `if not defined ${key} set ${key}=${value}`;
             }
