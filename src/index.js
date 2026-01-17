@@ -94,6 +94,7 @@ const install = async (cwd, version) => {
     return nodeVersion;
 };
 
+/*
 const override = async (workDir) => {
     const npmDir = path.join(workDir, 'node_modules', 'npm');
     const { bin } = await readJsonFile(path.join(npmDir, 'package.json'));
@@ -129,6 +130,7 @@ process.env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE
 
     return Promise.all(promiseList);
 };
+*/
 
 const detect = async () => {
     const [
@@ -196,7 +198,7 @@ const init = async (baseDir, version) => {
         mkdirPromise,
     ]);
 
-    await override(workDir)
+    // await override(workDir);
 
     // await Promise.all(nameList.map(async name => {
     //     const targetPath = path.join(binDir, name)
