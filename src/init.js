@@ -1,10 +1,17 @@
+const os = require('os');
 const fs = require('fs');
 
 const init = () => {
     if (process.platform === 'win32') {
-
+        fs.appendFileSync(
+            path.resolve(os.homedir(), 'Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1'),
+            '\nnvm-vanilla env --eval | Out-String | Invoke-Expression',
+        )
     } else {
-        fs.appendFileSync('~/.bashrc', '\neval "$(nvm-vanilla env --use-on-cd)"');
+        fs.appendFileSync(
+            path.resolve(os.homedir(), '.bashrc'),
+            '\neval "$(nvm-vanilla env --eval)"',
+        );
     }
 };
 
