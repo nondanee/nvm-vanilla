@@ -208,11 +208,10 @@ const init = async (baseDir, version) => {
     const workDir = path.join(baseDir, nodeVersion);
 
     try {
-        const stat = await promisify(fs.stat)(workDir);
-        if (stat.isDirectory()) {
-            throw `node version "${nodeVersion}" already installed`;
-        }
-    } catch (_) { }
+        await promisify(fs.mkdir)(workDir);
+    } catch (_) {
+        throw `node version "${nodeVersion}" already installed`;
+    }
 
     const binDir = path.join(workDir, 'bin');
     const templateDir = path.join(__dirname, 'template');
@@ -232,7 +231,7 @@ const init = async (baseDir, version) => {
         nameList,
     ] = await Promise.all([
         promisify(fs.readdir)(templateDir),
-        install(workDir, version),
+        install(workDir, nodeVersion),
         mkdirPromise,
     ]);
 
