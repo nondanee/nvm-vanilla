@@ -6,7 +6,7 @@ const { spawnSync, execFileSync } = require('child_process');
 
 const { init, use, list, detect, uninstall } = require('./index');
 
-const evalCommandSet = new Set(['use', 'autoload'])
+const evalCommandSet = new Set(['use', 'autoload']);
 
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
@@ -15,15 +15,13 @@ const main = async () => {
 
     const baseDir = path.join(homeDir, '.nvm2');
 
+    const args = process.argv.slice(2);
+
     let evalMode = false;
-    
-    const args = process.argv.slice(2).filter(_ => {
-        if (_ === '--eval') {
-            evalMode = true;
-            return false;
-        }
-        return true;
-    });
+    if (args[0] === '--eval') {
+        evalMode = true;
+        args.shift();
+    }
 
     const command = args[0];
     const version = args[1];
