@@ -138,8 +138,8 @@ const init = async (baseDir, version) => {
 
     await promisify(fs.mkdir)(workDir);
 
-    const binDir = path.join(workDir, 'bin');
-    const templateDir = path.join(__dirname, 'template');
+    // const binDir = path.join(workDir, 'bin');
+    // const templateDir = path.join(__dirname, 'template');
 
     const mkdirPromise = [
         'bin',
@@ -150,24 +150,24 @@ const init = async (baseDir, version) => {
     );
 
     const [
-        nameList,
+        // nameList,
         specificNodeVersion,
     ] = await Promise.all([
-        promisify(fs.readdir)(templateDir),
+        // promisify(fs.readdir)(templateDir),
         install(workDir, version),
     ]
         .concat(mkdirPromise));
 
     await promisify(fs.mkdir)(path.join(workDir, 'prefix', 'lib'));
 
-    await Promise.all(nameList.map(async name => {
-        const targetPath = path.join(binDir, name)
-        await promisify(fs.copyFile)(
-            path.join(templateDir, name),
-            targetPath,
-        );
-        await promisify(fs.chmod)(targetPath, 0o755);
-    }));
+    // await Promise.all(nameList.map(async name => {
+    //     const targetPath = path.join(binDir, name)
+    //     await promisify(fs.copyFile)(
+    //         path.join(templateDir, name),
+    //         targetPath,
+    //     );
+    //     await promisify(fs.chmod)(targetPath, 0o755);
+    // }));
 
     const linkDir = path.join(baseDir, specificNodeVersion);
 
