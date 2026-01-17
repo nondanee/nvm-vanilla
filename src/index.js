@@ -206,6 +206,10 @@ const getLocalNodeVersion = async (baseDir, semanticVersion) => {
 };
 
 const alias = async (baseDir, version, targetVersion) => {
+    if (version === 'system') {
+        throw 'cannot alias system node version';
+    }
+
     const linkDir = path.join(baseDir, version);
 
     const resetFlag = targetVersion === 'none' && false;
@@ -321,7 +325,7 @@ const use = async (baseDir, version, evalFlag = true) => {
     const prefixDir = path.join(baseDir, version, 'prefix');
     const cacheDir = path.join(baseDir, version, 'cache');
 
-    const resetFlag = version === 'system'
+    const resetFlag = version === 'system';
 
     // let checkFlag = false;
     // try {
