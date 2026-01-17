@@ -45,6 +45,7 @@ const main = async () => {
             } else {
                 console.log(':');
             }
+            break;
         }
         case 'install': {
             await init(baseDir, version);
@@ -68,6 +69,7 @@ const main = async () => {
             const childArgs = args.slice(2);
             const childCommand = command === 'run' ? 'node' : childArgs.shift();
             if (PATH) spawnSync(childCommand, childArgs, { stdio: 'inherit' });
+            break;
         }
         default:
     }
