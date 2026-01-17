@@ -110,7 +110,10 @@ const override = async (workDir) => {
 
     const promiseList = fileList.map(async relativeFilePath => {
         relativeFilePath = relativeFilePath.replace(/^\//, '');
-        const relativeLibPath = path.posix.relative(path.posix.dirname(relativeFilePath), '../../');
+        const relativeLibPath = path.posix.relative(
+            path.join(npmDir, path.posix.dirname(relativeFilePath)),
+            workDir,
+        );
         const prefix = `
 process.env.NPM_CONFIG_PREFIX = process.env.NPM_CONFIG_PREFIX
     || require("path").resolve(__dirname, ${JSON.stringify(relativeLibPath)}, "prefix");
