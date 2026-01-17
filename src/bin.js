@@ -43,7 +43,7 @@ const main = async () => {
                 __dirname,
                 process.platform == 'win32' ? 'nvm.ps1' : 'nvm.sh'
             ), 'utf-8');
-            process.stdin.write(content);
+            process.stdout.write(content);
             break;
         }
         case 'use': {
