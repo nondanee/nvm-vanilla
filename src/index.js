@@ -234,7 +234,7 @@ const init = async (baseDir, version) => {
     const templateDir = path.join(__dirname, 'template');
 
     const mkdirPromise = Promise.all([
-        'bin',
+        // 'bin',
         'cache',
         'prefix',
     ].map(
@@ -245,15 +245,16 @@ const init = async (baseDir, version) => {
         ));
 
     const [
-        nameList,
+        // nameList,
     ] = await Promise.all([
-        promisify(fs.readdir)(templateDir),
+        // promisify(fs.readdir)(templateDir),
         install(workDir, nodeVersion),
         mkdirPromise,
     ]);
 
     // await override(workDir);
 
+    /*
     const binNameList = await promisify(fs.readdir)(path.join(workDir, 'node_modules', '.bin'));
 
     const commandNameSet = new Set(binNameList.map(_ => _.split('.')[0]));
@@ -268,6 +269,7 @@ const init = async (baseDir, version) => {
         );
         await promisify(fs.chmod)(targetPath, 0o755);
     }));
+    */
 
     if (version !== nodeVersion) {
         await alias(baseDir, version, nodeVersion);
