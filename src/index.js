@@ -43,10 +43,10 @@ const promisifySpawn = (command, args, options) => {
     });
 };
 
-const getNodePackageVersion = async (version) => {
+const getNodeVersion = async (semanticVersion) => {
     const npmViewOutput = await promisify(execFile)('npm', [
         'view',
-        nodePackageName + '@' + version,
+        nodePackageName + '@' + semanticVersion,
         'version',
         '--json',
     ])
@@ -60,7 +60,7 @@ const getNodePackageVersion = async (version) => {
     return nodeVersion;
 };
 
-const getNpmVersion = async (targetVersion) => {
+const getNpmVersion = async (nodeVersion) => {
     const response = await new Promise((resolve, reject) => {
         https.get('https://nodejs.org/dist/index.json')
             .on('response', resolve)
@@ -81,8 +81,8 @@ const getNpmVersion = async (targetVersion) => {
     const list = JSON.parse(Buffer.concat(chunkList));
 
     const target = list.find(item =>
-        item.version === targetVersion ||
-        item.version === 'v' + targetVersion
+        item.version === nodeVersion ||
+        item.version === 'v' + nodeVersion
     );
 
     if (!target) throw 'NPM version not found';
