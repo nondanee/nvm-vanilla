@@ -8,11 +8,11 @@ const init = () => {
     if (process.platform === 'win32') {
 
     } else {
-        fs.appendFileSync('~/.bashrc', 
-    `
-    NVM_VANILLA_DIR="${__dirname}"
-    [ -s "$NVM_VANILLA_DIR/init.sh" ] && \. "$NVM_VANILLA_DIR/init.sh"
-    `
+        fs.appendFileSync('~/.bashrc',
+`
+NVM_VANILLA_DIR="${__dirname}"
+[ -s "$NVM_VANILLA_DIR/init.sh" ] && \. "$NVM_VANILLA_DIR/init.sh"
+`
         );
     }
 };
