@@ -197,17 +197,11 @@ const init = async (baseDir, version) => {
         }
     } catch (_) { }
 
-    try {
-        await clear(workDir);
-    } catch (_) { }
-
-    await promisify(fs.mkdir)(workDir);
-
-    // const binDir = path.join(workDir, 'bin');
-    // const templateDir = path.join(__dirname, 'template');
+    const binDir = path.join(workDir, 'bin');
+    const templateDir = path.join(__dirname, 'template');
 
     const mkdirPromise = Promise.all([
-        // 'bin',
+        'bin',
         'cache',
         'prefix',
     ].map(
@@ -218,24 +212,24 @@ const init = async (baseDir, version) => {
         ));
 
     const [
-        // nameList,
+        nameList,
         specificNodeVersion,
     ] = await Promise.all([
-        // promisify(fs.readdir)(templateDir),
+        promisify(fs.readdir)(templateDir),
         install(workDir, version),
         mkdirPromise,
     ]);
 
     // await override(workDir);
 
-    // await Promise.all(nameList.map(async name => {
-    //     const targetPath = path.join(binDir, name)
-    //     await promisify(fs.copyFile)(
-    //         path.join(templateDir, name),
-    //         targetPath,
-    //     );
-    //     await promisify(fs.chmod)(targetPath, 0o755);
-    // }));
+    await Promise.all(nameList.map(async name => {
+        const targetPath = path.join(binDir, name)
+        await promisify(fs.copyFile)(
+            path.join(templateDir, name),
+            targetPath,
+        );
+        await promisify(fs.chmod)(targetPath, 0o755);
+    }));
 
     const linkDir = path.join(baseDir, specificNodeVersion);
 
