@@ -196,14 +196,21 @@ const clear = async (dir) => {
 };
 
 const getLocalNodeVersion = async (baseDir, semanticVersion) => {
-    
+    const packageFile = path.join(baseDir, semanticVersion, 'node_modules', nodePackageName, 'package.json');
+    try {
+        const { version } = await readJsonFile(packageFile);
+        return version;
+    } catch (_) {
+        throw `no local node version "${semanticVersion}"`;
+    }
 };
 
 const alias = async (baseDir, version, targetVersion) => {
     const linkDir = path.join(baseDir, version);
 
     if (!targetVersion) {
-        await getLocalNodeVersion(baseDir, version);
+        const nodeVersion = await getLocalNodeVersion(baseDir, version);
+        console.log(nodeVersion);
         return;
     }
 
