@@ -227,7 +227,8 @@ const use = async (baseDir, version, evalFlag = true) => {
     version = await fill(version);
     if (!version) return;
 
-    const workDir = path.join(baseDir, version, 'bin');
+    // const workDir = path.join(baseDir, version, 'bin');
+    const workDir = path.join(baseDir, version, 'node_modules', '.bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
 
     let checkFlag = false;
