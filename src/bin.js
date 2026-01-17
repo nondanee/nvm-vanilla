@@ -75,4 +75,9 @@ const main = async () => {
     }
 };
 
-main();
+main()
+    .catch((error) => {
+        const message = (error || {}).stack || error;
+        process.stderr.write(message + '\n');
+        process.exit(-1);
+    });
