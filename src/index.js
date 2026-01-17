@@ -288,8 +288,10 @@ const use = async (baseDir, version, evalFlag = true) => {
     version = await corrent(version);
 
     // const workDir = path.join(baseDir, version, 'bin');
+
     const workDir = path.join(baseDir, version, 'node_modules', '.bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
+    const cacheDir = path.join(baseDir, version, 'prefix');
 
     let checkFlag = false;
     try {
@@ -307,13 +309,25 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     if (version !== 'system') list.unshift(workDir, prefixDir);
 
-    const PATH = list.join(path.delimiter);
+    const env = {};
+
+    env.PATH = list.join(path.delimiter);
+    
+    env.NPM_CONFIG_PREFIX = process.env.NPM_CONFIG_PREFIX || prefixDir;
+    env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE || cacheDir;
 
     // process.stderr.write('Now using node v' + version + '\n');
 
-    if (evalFlag) console.log('export PATH=' + PATH);
+    if (evalFlag) {
+        for (const key in env) {
+            const value = env[key];
+            process.stdout.write(
+                '' + '\n'
+            )
+        }
+    }
 
-    return PATH;
+    return env;
 };
 
 const list = async (baseDir) => {
