@@ -119,10 +119,12 @@ process.env.NPM_CONFIG_PREFIX = process.env.NPM_CONFIG_PREFIX
     || require("path").resolve(__filename, ${JSON.stringify(relativeLibPath)}, "prefix");
 process.env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE
     || require("path").resolve(__filename, ${JSON.stringify(relativeLibPath)}, "cache");
-        `;
+`
+        .trim();
         const filePath = path.join(npmDir, relativeFilePath);
-        const content = await promisify(fs.readFile)(filePath, 'utf-8');
-        await promisify(fs.writeFile)(filePath, prefix + content, 'utf-8');
+        let content = await promisify(fs.readFile)(filePath, 'utf-8');
+        content = content.replace(/\n/, '\n' + prefix + '\n'); // #!/usr/bin/env node 第一行要保留
+        await promisify(fs.writeFile)(filePath, content, 'utf-8');
     });
 
     return Promise.all(promiseList);
