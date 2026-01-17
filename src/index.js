@@ -182,6 +182,17 @@ const clear = async (dir) => {
     }
 };
 
+const alias = async (version, targetVersion) => {
+    const linkDir = path.join(baseDir, version);
+    const sourceDir = path.join(baseDir, targetVersion);
+
+    try {
+        await promisify(fs.unlink)(linkDir);
+    } catch (_) {}
+
+    await promisify(fs.symlink)(sourceDir, linkDir, 'dir');
+};
+
 const init = async (baseDir, version) => {
     version = await corrent(version);
     if (!version) return;
@@ -241,13 +252,7 @@ const init = async (baseDir, version) => {
     }));
 
     if (version !== nodeVersion) {
-        const linkDir = path.join(baseDir, version);
-
-        try {
-            await promisify(fs.unlink)(linkDir);
-        } catch (_) {}
-
-        await promisify(fs.symlink)(workDir, linkDir, 'dir');
+        await alias(version, nodeVersion);
     }
 };
 
@@ -312,4 +317,5 @@ module.exports = {
     use,
     list,
     detect,
+    alias,
 };
