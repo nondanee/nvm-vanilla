@@ -184,7 +184,18 @@ const init = async (baseDir, version) => {
         await promisify(fs.mkdir)(baseDir);
     } catch (_) { }
 
-    const workDir = path.join(baseDir, version);
+    const nodeVersion = await getNodeVersion(version);
+
+    if (!nodeVersion) throw `no satisify node version "${version}"`;
+
+    const workDir = path.join(baseDir, nodeVersion);
+
+    try {
+        const stat = await promisify(fs.stat)(workDir);
+        if (stat.isDirectory()) {
+            throw `node version "${nodeVersion}" already installed`;
+        }
+    } catch (_) { }
 
     try {
         await clear(workDir);
