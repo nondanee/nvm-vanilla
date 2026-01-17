@@ -94,7 +94,7 @@ const getNpmVersion = async (nodeVersion) => {
         item.version === 'v' + nodeVersion
     );
 
-    if (!target) throw 'NPM version not found';
+    if (!target) throw 'npm version not found';
 
     return target.npm;
 };
@@ -169,7 +169,11 @@ const detect = async () => {
         nodeVersion,
         nvmrc,
     ] = await Promise.all(
-        ['.node-version', '.nvmrc'].map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => { }))
+        [
+            '.node-version',
+            '.nvmrc',
+        ]
+            .map(name => promisify(fs.readFile)(name, 'utf-8').catch(() => { }))
     );
 
     return String(nodeVersion || nvmrc || '').trim();
