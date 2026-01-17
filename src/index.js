@@ -216,9 +216,7 @@ const init = async (baseDir, version) => {
 
     const nodeVersion = await getNodeVersion(version);
 
-    if (nodeVersion) {
-        console.log(`prepare to install node version "${nodeVersion}"`);
-    } else {
+    if (!nodeVersion) {
         throw `no satisified node version "${version}"`;
     }
 
