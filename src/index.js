@@ -141,11 +141,10 @@ const detect = async () => {
     return String(nodeVersion || nvmrc || '').trim();
 };
 
-const fill = async (version) => {
+const corrent = async (version) => {
     if (!version) version = await detect();
     if (!version) {
-        process.stderr.write("Can't find version in dotfiles. Please provide a version manually to the command.\n");
-        return;
+        throw 'cannot detect node version';
     }
     return version.replace(/^v/i, '');
 };
@@ -159,7 +158,7 @@ const clear = async (dir) => {
 };
 
 const init = async (baseDir, version) => {
-    version = await fill(version);
+    version = await corrent(version);
     if (!version) return;
 
     try {
@@ -178,7 +177,7 @@ const init = async (baseDir, version) => {
     // const templateDir = path.join(__dirname, 'template');
 
     const mkdirPromise = Promise.all([
-        'bin',
+        // 'bin',
         'cache',
         'prefix',
     ].map(
@@ -226,8 +225,7 @@ const uninstall = async (baseDir, version) => {
 };
 
 const use = async (baseDir, version, evalFlag = true) => {
-    version = await fill(version);
-    if (!version) return;
+    version = await corrent(version);
 
     // const workDir = path.join(baseDir, version, 'bin');
     const workDir = path.join(baseDir, version, 'node_modules', '.bin');
@@ -240,9 +238,7 @@ const use = async (baseDir, version, evalFlag = true) => {
     } catch (_) {}
 
     if (!checkFlag && version !== 'system') {
-        process.stderr.write("Can't find an installed Node version matching v" + version + ".\n");
-        if (evalFlag) console.log(':');
-        return;
+        throw `node version "${version}" not installed`;
     }
 
     let list = process.env.PATH.split(path.delimiter);
