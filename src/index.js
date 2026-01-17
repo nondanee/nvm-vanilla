@@ -90,7 +90,7 @@ const getNpmVersion = async (nodeVersion) => {
     return target.npm;
 };
 
-const install = async (cwd, version) => {
+const install = async (cwd, nodeVersion) => {
     // await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
     //     stdio: 'inherit',
     //     // shell: true,
@@ -102,7 +102,13 @@ const install = async (cwd, version) => {
 
     const npmVersion = await getNpmVersion(nodeVersion);
 
-    await promisifySpawn(npmCommand, ['install', '--no-save', 'npm' + '@' + npmVersion], {
+    await promisifySpawn(npmCommand, [
+        'install',
+        '--no-save',
+        '--ignore-engines',
+        nodePackageName + '@' + nodeVersion,
+        'npm' + '@' + npmVersion,
+    ], {
         stdio: 'inherit',
         // shell: true,
         cwd,
