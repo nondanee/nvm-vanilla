@@ -39,12 +39,16 @@ const getNpmCommand = () => {
     return process.platform == 'win32' ? 'npm.cmd' : 'npm';
 };
 
+const npmCommand = getNpmCommand();
+
 const getNodePackageName = () => {
     const platform = process.platform == 'win32' ? 'win' : process.platform;
     const arch = platform == 'win' && process.arch == 'ia32' ? 'x86' : process.arch;
     const prefix = (process.platform == 'darwin' && process.arch == 'arm64') ? 'node-bin' : 'node';
     return [prefix, platform, arch].join('-');
 };
+
+const nodePackageName = getNodePackageName();
 
 const readJsonFile = (filePath) => (
     promisify(fs.readFile)(filePath, 'utf8').then(JSON.parse)
@@ -69,10 +73,6 @@ const install = async (cwd, version) => {
 
     process.env.npm_config_global = 'false';
     process.env.npm_config_repository = '';
-
-    const npmCommand = getNpmCommand();
-
-    const nodePackageName = getNodePackageName();
 
     const npmViewOutput = await promisify(execFile)('npm', ['view', nodePackageName + '@' + version, 'version', '--json']).catch(() => {});
 
@@ -267,8 +267,6 @@ const use = async (baseDir, version, evalFlag = true) => {
 
 const list = async (baseDir) => {
     const nameList = await promisify(fs.readdir)(baseDir);
-
-    const nodePackageName = getNodePackageName();
 
     let versionList = await Promise.all(nameList.map(async name => {
         const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
