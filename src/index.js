@@ -311,8 +311,8 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     env.PATH = list.join(path.delimiter);
     
-    env.NPM_CONFIG_PREFIX = process.env.NPM_CONFIG_PREFIX || prefixDir;
-    env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE || cacheDir;
+    env.NPM_CONFIG_PREFIX = prefixDir;
+    env.NPM_CONFIG_CACHE = cacheDir;
 
     // process.stderr.write('Now using node v' + version + '\n');
 
@@ -330,6 +330,10 @@ const use = async (baseDir, version, evalFlag = true) => {
             }
 
             process.stdout.write(
+                command + '\n'
+            );
+
+            process.stderr.write(
                 command + '\n'
             );
         }
