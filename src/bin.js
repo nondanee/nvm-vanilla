@@ -28,7 +28,7 @@ const main = async () => {
     const command = args[0];
     const version = args[1];
 
-    if (!(evalMode ^ evalCommandSet.has(command))) return;
+    if (evalMode ^ evalCommandSet.has(command)) return;
 
     const checkVersion = () => {
         if (version) return true;
