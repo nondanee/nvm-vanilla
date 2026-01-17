@@ -291,7 +291,7 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     const workDir = path.join(baseDir, version, 'node_modules', '.bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
-    const cacheDir = path.join(baseDir, version, 'prefix');
+    const cacheDir = path.join(baseDir, version, 'cache');
 
     let checkFlag = false;
     try {
@@ -321,8 +321,11 @@ const use = async (baseDir, version, evalFlag = true) => {
     if (evalFlag) {
         for (const key in env) {
             const value = env[key];
+            let command = key === 'PATH'
+                ? `export ${key}=${value}`
+                : `export ${key}=\${${key}:-${value}}`;
             process.stdout.write(
-                '' + '\n'
+                command + '\n'
             )
         }
     }
