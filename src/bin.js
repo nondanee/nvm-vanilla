@@ -32,7 +32,7 @@ const main = async () => {
 
     const checkVersion = () => {
         if (version) return true;
-        process.stderr.write("Please provide a version manually to the command.\n");
+        throw 'no specific node version';
     };
 
     switch (command) {
