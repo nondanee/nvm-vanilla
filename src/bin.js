@@ -4,7 +4,9 @@ const os = require('os');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 
-const { init, use, list, detect, uninstall, alias, which } = require('./index');
+const { init: install, use, list, detect, uninstall, alias, which } = require('./index');
+
+const init = require('./init');
 
 const evalCommandSet = new Set(['use', 'autoload']);
 
@@ -59,7 +61,7 @@ const main = async () => {
             break;
         }
         case 'install': {
-            await init(baseDir, version);
+            await install(baseDir, version);
             break;
         }
         case 'unalias':
@@ -85,6 +87,10 @@ const main = async () => {
         }
         case 'current': {
             spawnSync('node', ['--version'], { stdio: 'inherit' });
+            break;
+        }
+        case 'init': {
+            await init();
             break;
         }
         default:
