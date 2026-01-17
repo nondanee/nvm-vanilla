@@ -45,7 +45,7 @@ const promisifySpawn = (command, args, options) => {
 };
 
 const getNodeVersion = async (semanticVersion) => {
-    const npmViewOutput = await promisify(execFile)('npm', [
+    const npmViewOutput = await promisify(execFile)(npmCommand, [
         'view',
         nodePackageName + '@' + semanticVersion,
         'version',
