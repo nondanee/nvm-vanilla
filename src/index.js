@@ -96,7 +96,7 @@ const install = async (cwd, version) => {
 
 const override = async (workDir) => {
     const npmDir = path.join(workDir, 'node_modules', 'npm');
-    const { bin } = path.join(npmDir, 'package.json');
+    const { bin } = await readJsonFile(path.join(npmDir, 'package.json'));
 
     const fileList = [];
 
@@ -122,7 +122,7 @@ process.env.NPM_CONFIG_CACHE = process.env.NPM_CONFIG_CACHE
         `;
         const filePath = path.join(npmDir, relativeFilePath);
         const content = await promisify(fs.readFile)(filePath, 'utf-8');
-        await promisify(fs.writeFile)(filePath, prefix + content);
+        await promisify(fs.writeFile)(filePath, prefix + content, 'utf-8');
     });
 
     return Promise.all(promiseList);
