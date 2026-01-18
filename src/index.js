@@ -359,15 +359,13 @@ const use = async (baseDir, version, evalFlag = true) => {
     if (evalFlag) {
         for (const key in env) {
             const value = env[key];
-            let command = (key === 'PATH' || true)
-                ? `export ${key}=${value}`
-                : `export ${key}=\${${key}:-${value}}`;
+
+            // shell
+            let command = `export ${key}=${value}`;
 
             // powershell
-            if (process.platform === 'win32') {
-                command = (key === 'PATH' || true)
-                    ? `$env:${key}="${value}"`
-                    : `if not defined ${key} set ${key}=${value}`;
+            if (process.env.PSModulePath) {
+                command = `$env:${key}="${value}"`;
             }
 
             process.stdout.write(
