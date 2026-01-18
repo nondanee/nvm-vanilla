@@ -7,9 +7,13 @@
     "nvm-vanilla": "src/bin.js"
   },
   "scripts": {
+    "lint": "eslint src/**/*.js",
     "postinstall": "node src/init.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
 }
