@@ -223,16 +223,19 @@ const alias = async (baseDir, version, targetVersion) => {
         console.log(nodeVersion);
         return;
     } else if (!resetFlag) {
-        await getLocalNodeVersion(baseDir, targetVersion); // check
+        targetVersion = await getLocalNodeVersion(baseDir, targetVersion); // check
     }
 
-    const sourceDir = path.join(baseDir, targetVersion);
+    // const sourceDir = path.join(baseDir, targetVersion);
 
     try {
         await promisify(fs.unlink)(linkDir);
     } catch (_) { }
 
-    if (!resetFlag) await promisify(fs.symlink)(sourceDir, linkDir, 'dir');
+    if (!resetFlag) {
+        // await promisify(fs.symlink)(sourceDir, linkDir, 'dir');
+        await promisify(fs.writeFile)(linkDir, targetVersion, 'utf-8');
+    }
 };
 
 const init = async (baseDir, version) => {
