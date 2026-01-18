@@ -19,11 +19,11 @@ const init = async () => {
     if (process.platform === 'win32') {
         const profilePath = path.resolve(os.homedir(), 'Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1');
         const line = 'nvm-vanilla --eval env | Out-String | Invoke-Expression';
-        await insert(content, line);
+        await insert(profilePath, line);
     } else {
         const profilePath = path.resolve(os.homedir(), '.bashrc');
         const line = 'eval "$(nvm-vanilla --eval env)"';
-        await insert(content, line);
+        await insert(profilePath, line);
     }
 };
 
