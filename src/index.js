@@ -200,13 +200,29 @@ const clear = async (dir) => {
 };
 
 const getLocalNodeVersion = async (baseDir, name) => {
-    const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
-    try {
-        const { version } = await readJsonFile(packageFile);
-        return version.replace(/^v/, '');
-    } catch (_) {
-        throw `no local node version "${name}"`;
+    let aliasFile = path.join(baseDir, name);
+    let packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
+
+    let [
+        aliasVersion,
+        packageData,
+    ] = await Promise.all([
+        promisify(fs.readFile)(aliasFile, 'utf-8').catch(() => { }),
+        readJsonFile(packageFile),
+    ]);
+
+    if (aliasVersion) {
+
+    } else if (packageData) {
+        return packageData.version.replace(/^v/, '');
     }
+
+    // try {
+    //     // const { version } = await ;
+    //     return version.replace(/^v/, '');
+    // } catch (_) {
+    //     throw `no local node version "${name}"`;
+    // }
 };
 
 const alias = async (baseDir, version, targetVersion) => {
@@ -388,7 +404,7 @@ const list = async (baseDir) => {
     const nameList = await promisify(fs.readdir)(baseDir).catch(() => []);
 
     let versionList = await Promise.all(nameList.map(async name => {
-        const version = await getLocalNodeVersion(baseDir, name).catch(() => {});
+        const version = await getLocalNodeVersion(baseDir, name).catch(() => { });
         if (!version) {
             await uninstall(baseDir, version);
             return;
