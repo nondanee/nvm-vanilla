@@ -1,6 +1,6 @@
 {
   "name": "nvm-vanilla",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "node version manager written with node itself",
   "main": "index.js",
   "bin": {
