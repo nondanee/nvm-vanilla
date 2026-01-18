@@ -3,10 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 
+const pattern = /^.*nvm-vanilla.*$/m;
+
 const insert = async (profilePath, line) => {
     let content = await promisify(fs.readFile)(profilePath, 'utf-8');
-    if (/nvm-vanilla/.test(content)) {
-        content = content.replace(/^.*nvm-vanilla.*$/m, line);
+    if (pattern.test(content)) {
+        content = content.replace(pattern, line);
     } else {
         content += '\n' + line;
     }
