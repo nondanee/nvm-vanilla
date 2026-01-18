@@ -427,7 +427,7 @@ const use = async (baseDir, version, evalFlag = true) => {
             let command = `export ${key}=${value}`;
 
             // powershell
-            if (process.env.PSModulePath) {
+            if (!process.env.SHELL) {
                 command = `$env:${key}="${value}"`;
             }
 

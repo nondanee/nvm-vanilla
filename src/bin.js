@@ -53,7 +53,7 @@ const main = async () => {
         case 'env': {
             const content = await promisify(fs.readFile)(path.resolve(
                 __dirname,
-                process.env.PSModulePath ? 'nvm.ps1' : 'nvm.sh'
+                process.env.SHELL ? 'nvm.sh' : 'nvm.ps1'
             ), 'utf-8');
             process.stdout.write(content);
             break;
@@ -68,7 +68,7 @@ const main = async () => {
                 if (!targetVersion) throw '';
                 await use(baseDir, targetVersion);
             } catch (_) {
-                console.log(process.env.PSModulePath ? ';' : ':');
+                console.log(process.env.SHELL ? ':' : ';');
             }
             break;
         }
