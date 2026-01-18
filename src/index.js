@@ -126,6 +126,15 @@ const install = async (cwd, nodeVersion, prefixDir) => {
         }),
     });
 
+    if (process.platform === 'win32') {
+        const nodeLib = path.join(prefixDir, 'node_modules', nodePackageName);
+        const packageData = await readJsonFile(path.join(nodeLib, 'package.json'));
+        let binPath = packageData.bin.node;
+        binPath = binPath.replace(/^\//, '');
+        binPath = path.join(nodeLib, binPath);
+        await promisify(fs.link)(binPath, path.basename(binPath));
+    }
+
     return nodeVersion;
 };
 
