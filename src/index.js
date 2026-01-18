@@ -208,21 +208,19 @@ const getLocalNodeVersion = async (baseDir, name) => {
         packageData,
     ] = await Promise.all([
         promisify(fs.readFile)(aliasFile, 'utf-8').catch(() => { }),
-        readJsonFile(packageFile),
+        readJsonFile(packageFile).catch(() => { }),
     ]);
 
     if (aliasVersion) {
-
-    } else if (packageData) {
-        return packageData.version.replace(/^v/, '');
+        packageFile = path.join(baseDir, aliasVersion, 'node_modules', nodePackageName, 'package.json');
+        packageData = await readJsonFile(packageFile).catch(() => { });
     }
-
-    // try {
-    //     // const { version } = await ;
-    //     return version.replace(/^v/, '');
-    // } catch (_) {
-    //     throw `no local node version "${name}"`;
-    // }
+    
+    if (packageData) {
+        return packageData.version.replace(/^v/, '');
+    } else {
+        throw `no local node version "${name}"`;
+    }
 };
 
 const alias = async (baseDir, version, targetVersion) => {
