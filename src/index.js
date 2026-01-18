@@ -426,7 +426,7 @@ const list = async (baseDir) => {
     let versionList = await Promise.all(nameList.map(async name => {
         const version = await getLocalNodeVersion(baseDir, name).catch(() => { });
         if (!version) {
-            await uninstall(baseDir, version);
+            await uninstall(baseDir, name);
             return;
         }
         return 'node@' + name + ' (' + version + ')';
