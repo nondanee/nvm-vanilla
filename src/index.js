@@ -304,7 +304,7 @@ const init = async (baseDir, version) => {
 
     const binNameList = await promisify(fs.readdir)(prefixDir);
     await Promise.all(binNameList.map(async name => {
-        if (/\.ps1$/.test(name)) {
+        if (/\.ps1$/.test(name)) { // .ps1 路径有问题，用 .cmd
             await promisify(fs.unlink)(path.join(prefixDir, name));
         }
     }));
