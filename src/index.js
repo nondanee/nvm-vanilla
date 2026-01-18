@@ -304,6 +304,13 @@ const init = async (baseDir, version) => {
         // mkdirPromise,
     ]);
 
+    const binNameList = await promisify(fs.readdir)(prefixDir);
+    await Promise.all(binNameList.map(async name => {
+        if (/\.ps1$/.test(name)) {
+            await promisify(fs.unlink)(path.join(prefixDir, name));
+        }
+    }));
+
     // await override(workDir);
 
     /*
