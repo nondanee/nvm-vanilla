@@ -215,10 +215,14 @@ const getNodePackageFilePath = (baseDir, name) => {
     if (process.platform === 'win32') {
         return path.join(baseDir, name, 'prefix', 'node_modules', nodePackageName, 'package.json');
     }
+    return path.join(baseDir, name, 'prefix', 'lib', 'node_modules', nodePackageName, 'package.json');
 };
 
 const getPrefixBinDir = (baseDir, name) => {
-
+    if (process.platform === 'win32') {
+        return path.join(baseDir, name, 'prefix');
+    }
+    return path.join(baseDir, name, 'prefix', 'bin');
 };
 
 const getLocalNodeVersion = async (baseDir, name) => {
@@ -362,8 +366,7 @@ const uninstall = async (baseDir, version) => {
 
 const which = async (baseDir, name) => {
     const version = await getLocalNodeVersion(baseDir, name);
-    const prefixDir = path.join(baseDir, version, 'prefix');
-    return prefixDir;
+    return getPrefixBinDir(baseDir, version);
 };
 
 const use = async (baseDir, version, evalFlag = true) => {
@@ -373,10 +376,12 @@ const use = async (baseDir, version, evalFlag = true) => {
     }
 
     // const workDir = path.join(baseDir, version, 'bin');
-
     // const workDir = path.join(baseDir, version, 'node_modules', '.bin');
-    const prefixDir = path.join(baseDir, version, 'prefix');
+
+    const prefixDir = path.join(baseDir, version, 'prefix'); 
     const cacheDir = path.join(baseDir, version, 'cache');
+
+    const prefixBinDir = getPrefixBinDir(baseDir, version);
 
     const resetFlag = version === 'system';
 
@@ -394,7 +399,7 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     list = list.filter(item => item.indexOf(baseDir) === -1);
 
-    if (!resetFlag) list.unshift(prefixDir);
+    if (!resetFlag) list.unshift(prefixBinDir);
 
     const env = {};
 
