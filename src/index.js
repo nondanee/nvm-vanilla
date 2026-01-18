@@ -211,9 +211,19 @@ const clear = async (dir) => {
     }
 };
 
+const getNodePackageFilePath = (baseDir, name) => {
+    if (process.platform === 'win32') {
+        return path.join(baseDir, name, 'prefix', 'node_modules', nodePackageName, 'package.json');
+    }
+};
+
+const getPrefixBinDir = (baseDir, name) => {
+
+};
+
 const getLocalNodeVersion = async (baseDir, name) => {
     let aliasFile = path.join(baseDir, name);
-    let packageFile = path.join(baseDir, name, 'prefix', 'node_modules', nodePackageName, 'package.json');
+    let packageFile = getNodePackageFilePath(baseDir, name);
 
     let [
         aliasVersion,
@@ -224,7 +234,7 @@ const getLocalNodeVersion = async (baseDir, name) => {
     ]);
 
     if (aliasVersion) {
-        packageFile = path.join(baseDir, aliasVersion, 'prefix', 'node_modules', nodePackageName, 'package.json');
+        packageFile = getNodePackageFilePath(baseDir, aliasVersion);
         packageData = await readJsonFile(packageFile).catch(() => { });
     }
     
