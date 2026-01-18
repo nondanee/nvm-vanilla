@@ -109,8 +109,8 @@ const main = async () => {
             break;
         }
         case 'current': {
-            const output = await promisify(execFile)('node', ['--version']).catch(() => {});
-            if (output) console.log(output.stdout.replace(/^v/, '').trim());
+            const nodeVersionOutput = await promisify(execFile)('node', ['--version']).catch(() => { });
+            if (nodeVersionOutput) console.log(nodeVersionOutput.stdout.replace(/^v/, '').trim());
             break;
         }
         case 'init': {
