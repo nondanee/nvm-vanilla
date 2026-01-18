@@ -387,7 +387,7 @@ const list = async (baseDir) => {
     const nameList = await promisify(fs.readdir)(baseDir).catch(() => []);
 
     let versionList = await Promise.all(nameList.map(async name => {
-        const version = getLocalNodeVersion(baseDir, name).catch(() => {});
+        const version = await getLocalNodeVersion(baseDir, name).catch(() => {});
         if (!version) return;
         return 'node@' + name + ' (' + version + ')';
     }));
