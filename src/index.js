@@ -360,6 +360,10 @@ const uninstall = async (baseDir, version) => {
     const workDir = path.join(baseDir, version);
 
     try {
+        await promisify(fs.unlink)(workDir);
+    } catch (_) { }
+
+    try {
         await clear(workDir);
     } catch (_) { }
 };
