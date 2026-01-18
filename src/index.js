@@ -242,7 +242,7 @@ const getLocalNodeVersion = async (baseDir, name) => {
         packageFile = getNodePackageFilePath(baseDir, aliasVersion);
         packageData = await readJsonFile(packageFile).catch(() => { });
     }
-    
+
     try {
         return packageData.version.replace(/^v/, '');
     } catch (_) {
@@ -387,7 +387,7 @@ const use = async (baseDir, version, evalFlag = true) => {
     // const workDir = path.join(baseDir, version, 'bin');
     // const workDir = path.join(baseDir, version, 'node_modules', '.bin');
 
-    const prefixDir = path.join(baseDir, version, 'prefix'); 
+    const prefixDir = path.join(baseDir, version, 'prefix');
     const cacheDir = path.join(baseDir, version, 'cache');
 
     const prefixBinDir = getPrefixBinDir(baseDir, version);
