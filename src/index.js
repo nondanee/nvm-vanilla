@@ -203,7 +203,7 @@ const getLocalNodeVersion = async (baseDir, name) => {
     const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
     try {
         const { version } = await readJsonFile(packageFile);
-        return version;
+        return version.replace(/^v/, '');
     } catch (_) {
         throw `no local node version "${name}"`;
     }
