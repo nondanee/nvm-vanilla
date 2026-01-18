@@ -1,13 +1,12 @@
 {
   "name": "nvm-vanilla",
   "version": "1.0.19",
-  "description": "",
+  "description": "node version manager written with node itself",
   "main": "index.js",
   "bin": {
     "nvm-vanilla": "src/bin.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node src/init.js"
   },
   "keywords": [],
