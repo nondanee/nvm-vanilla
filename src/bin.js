@@ -4,7 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { promisify } = require('util');
-const { spawnSync, execFileSync } = require('child_process');
+const { spawnSync, execFile } = require('child_process');
 const { version } = require('../package.json');
 
 const { init: install, use, list, detect, uninstall, alias, which } = require('./index');
@@ -109,7 +109,8 @@ const main = async () => {
             break;
         }
         case 'current': {
-            spawnSync('node', ['--version'], { stdio: 'inherit' });
+            const output = await promisify(execFile)('node', ['--version']).catch(() => {});
+            if (output) console.log(output.stdout.replace(/^v/, '').trim());
             break;
         }
         case 'init': {
