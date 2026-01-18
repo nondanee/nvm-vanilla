@@ -33,7 +33,7 @@ const init = async () => {
     while (index < profileList.length) {
         const profileName = profileList[index];
         const profilePath = path.resolve(os.homedir(), profileName);
-        await insert(profilePath).catch(() => {});
+        await insert(profilePath).catch(() => { });
         index += 1;
     }
 };

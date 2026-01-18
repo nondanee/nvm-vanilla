@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -317,6 +318,7 @@ const init = async (baseDir, version) => {
 
     await mkdirPromise;
 
+    /*
     const [
         // nameList,
     ] = await Promise.all([
@@ -324,6 +326,9 @@ const init = async (baseDir, version) => {
         install(workDir, nodeVersion, prefixDir),
         // mkdirPromise,
     ]);
+    */
+
+    await install(workDir, nodeVersion, prefixDir);
 
     const binNameList = await promisify(fs.readdir)(prefixDir);
     await Promise.all(binNameList.map(async name => {
