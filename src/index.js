@@ -31,10 +31,9 @@ const readJsonFile = (filePath) => (
 );
 
 const promisifySpawn = (command, args, options) => {
-    const child = spawn(command, args, {
+    const child = spawn(command, args, Object.assign({}, {
         stdio: 'inherit',
-        ...options,
-    });
+    }, options));
 
     return new Promise((resolve, reject) => {
         child.on('exit', code => {
@@ -122,10 +121,9 @@ const install = async (cwd, nodeVersion, prefixDir) => {
         stdio: 'inherit',
         // shell: true,
         cwd,
-        env: {
-            ...process.env,
+        env: Object.assign({}, process.env, {
             NPM_CONFIG_PREFIX: prefixDir,
-        },
+        }),
     });
 
     return nodeVersion;
