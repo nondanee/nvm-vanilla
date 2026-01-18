@@ -386,8 +386,7 @@ const list = async (baseDir) => {
     const nameList = await promisify(fs.readdir)(baseDir);
 
     let versionList = await Promise.all(nameList.map(async name => {
-        const packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
-        const { version } = await readJsonFile(packageFile).catch(() => ({}));
+        const version = getLocalNodeVersion(baseDir, name).catch(() => {});
         if (!version) return;
         return 'node@' + name + ' (' + version + ')';
     }));
