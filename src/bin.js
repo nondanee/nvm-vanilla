@@ -56,7 +56,7 @@ const main = async () => {
                 if (!targetVersion) throw '';
                 await use(baseDir, targetVersion);
             } catch (_) {
-                console.log(':');
+                console.log(process.env.PSModulePath ? ';' : ':');
             }
             break;
         }
