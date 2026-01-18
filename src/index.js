@@ -424,7 +424,7 @@ const use = async (baseDir, version, evalFlag = true) => {
             const value = env[key];
 
             // shell
-            let command = `export ${key}=${value}`;
+            let command = `export ${key}="${value}"`;
 
             // powershell
             if (!process.env.SHELL) {
