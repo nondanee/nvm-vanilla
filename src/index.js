@@ -429,6 +429,11 @@ const use = async (baseDir, version, evalFlag = true) => {
             // powershell
             if (!process.env.SHELL) {
                 command = `$env:${key}="${value}"`;
+            } else if (process.platform === 'win32') {
+                command
+                    .replace(/([\w+]):\\/g, (_, $1) => '/' + $1.toLowerCase() + '/')
+                    .replace(/\\/g, '/')
+                    .replace(/;/g, ':');
             }
 
             process.stdout.write(
