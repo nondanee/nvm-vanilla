@@ -16,12 +16,12 @@ const evalCommandSet = new Set(['use', 'autoload', 'env']);
 const main = async () => {
     // process.stderr.write(JSON.stringify(process.argv) + '\n'); // debug
 
-    await promisify(fs.appendFile)(path.resolve(__dirname, '.history'), JSON.stringify({
-        argv: process.argv,
-        cwd: process.cwd(),
-        time: Date.now(),
-        pwsh: !!process.env.PSModulePath,
-    }, null, 4) + '\n');
+    // await promisify(fs.appendFile)(path.resolve(__dirname, '.history'), JSON.stringify({
+    //     argv: process.argv,
+    //     cwd: process.cwd(),
+    //     time: Date.now(),
+    //     pwsh: !!process.env.PSModulePath,
+    // }, null, 4) + '\n');
 
     const homeDir = os.homedir();
 
