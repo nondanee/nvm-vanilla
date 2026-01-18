@@ -3,12 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 
+const envCommand = 'nvm-vanilla --eval env';
+
 const pattern = /^.*nvm-vanilla.*$/m;
 
 const insert = async (profilePath) => {
     const line = /\.ps1$/.test(profilePath)
-        ? 'nvm-vanilla --eval env | Out-String | Invoke-Expression'
-        : 'eval "$(nvm-vanilla --eval env)"';
+        ? `${envCommand} | Out-String | Invoke-Expression`
+        : `eval "$(${envCommand})"`;
 
     let content = await promisify(fs.readFile)(profilePath, 'utf-8');
     if (pattern.test(content)) {
