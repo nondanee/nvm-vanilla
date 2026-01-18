@@ -17,7 +17,7 @@ const main = async () => {
 
     const homeDir = os.homedir();
 
-    const baseDir = path.join(homeDir, '.nvm2');
+    const baseDir = path.join(homeDir, '.nvm-vanilla');
 
     const args = process.argv.slice(2);
 
