@@ -132,7 +132,7 @@ const install = async (cwd, nodeVersion, prefixDir) => {
         let binPath = packageData.bin.node;
         binPath = binPath.replace(/^\//, '');
         binPath = path.join(nodeLib, binPath);
-        await promisify(fs.link)(binPath, path.basename(binPath));
+        await promisify(fs.link)(binPath, path.join(prefixDir, path.basename(binPath)));
     }
 
     return nodeVersion;
