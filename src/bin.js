@@ -5,6 +5,7 @@ const os = require('os');
 const path = require('path');
 const { promisify } = require('util');
 const { spawnSync, execFileSync } = require('child_process');
+const { version } = require('../package.json');
 
 const { init: install, use, list, detect, uninstall, alias, which } = require('./index');
 
@@ -45,6 +46,10 @@ const main = async () => {
     };
 
     switch (command) {
+        case '--version': {
+            console.log(version);
+            break;
+        }
         case 'env': {
             const content = await promisify(fs.readFile)(path.resolve(
                 __dirname,
