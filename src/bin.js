@@ -52,9 +52,10 @@ const main = async () => {
         }
         case 'autoload': {
             const targetVersion = await detect(baseDir);
-            if (targetVersion) {
+            try {
+                if (!targetVersion) throw '';
                 await use(baseDir, targetVersion);
-            } else {
+            } catch (_) {
                 console.log(':');
             }
             break;
