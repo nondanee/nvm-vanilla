@@ -206,7 +206,7 @@ const clear = async (dir) => {
 
 const getLocalNodeVersion = async (baseDir, name) => {
     let aliasFile = path.join(baseDir, name);
-    let packageFile = path.join(baseDir, name, 'node_modules', nodePackageName, 'package.json');
+    let packageFile = path.join(baseDir, name, 'prefix', 'node_modules', nodePackageName, 'package.json');
 
     let [
         aliasVersion,
@@ -217,7 +217,7 @@ const getLocalNodeVersion = async (baseDir, name) => {
     ]);
 
     if (aliasVersion) {
-        packageFile = path.join(baseDir, aliasVersion, 'node_modules', nodePackageName, 'package.json');
+        packageFile = path.join(baseDir, aliasVersion, 'prefix', 'node_modules', nodePackageName, 'package.json');
         packageData = await readJsonFile(packageFile).catch(() => { });
     }
     
