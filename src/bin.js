@@ -19,6 +19,7 @@ const main = async () => {
         argv: process.argv,
         cwd: process.cwd(),
         time: Date.now(),
+        pwsh: !!process.env.PSModulePath,
     }, null, 4) + '\n');
 
     const homeDir = os.homedir();
