@@ -99,7 +99,7 @@ const getNpmVersion = async (nodeVersion) => {
     return target.npm;
 };
 
-const install = async (cwd, nodeVersion) => {
+const install = async (cwd, nodeVersion, prefixDir) => {
     // await promisifySpawn(npmCommand, ['install', '--no-save', nodePackageName + '@' + version], {
     //     stdio: 'inherit',
     //     // shell: true,
@@ -113,7 +113,8 @@ const install = async (cwd, nodeVersion) => {
 
     await promisifySpawn(npmCommand, [
         'install',
-        '--no-save',
+        '--global',
+        // '--no-save',
         '--ignore-engines',
         nodePackageName + '@' + nodeVersion,
         'npm' + '@' + npmVersion,
@@ -121,6 +122,10 @@ const install = async (cwd, nodeVersion) => {
         stdio: 'inherit',
         // shell: true,
         cwd,
+        env: {
+            ...process.env,
+            NPM_CONFIG_PREFIX: prefixDir,
+        },
     });
 
     return nodeVersion;
@@ -275,6 +280,7 @@ const init = async (baseDir, version) => {
     }
 
     const binDir = path.join(workDir, 'bin');
+    const prefixDir = path.join(workDir, 'prefix');
     const templateDir = path.join(__dirname, 'template');
 
     const mkdirPromise = Promise.all([
@@ -288,12 +294,14 @@ const init = async (baseDir, version) => {
             promisify(fs.mkdir)(path.join(workDir, 'prefix', 'lib'))
         ));
 
+    await mkdirPromise;
+
     const [
         // nameList,
     ] = await Promise.all([
         // promisify(fs.readdir)(templateDir),
-        install(workDir, nodeVersion),
-        mkdirPromise,
+        install(workDir, nodeVersion, prefixDir),
+        // mkdirPromise,
     ]);
 
     // await override(workDir);
@@ -342,7 +350,7 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     // const workDir = path.join(baseDir, version, 'bin');
 
-    const workDir = path.join(baseDir, version, 'node_modules', '.bin');
+    // const workDir = path.join(baseDir, version, 'node_modules', '.bin');
     const prefixDir = path.join(baseDir, version, 'prefix');
     const cacheDir = path.join(baseDir, version, 'cache');
 
@@ -362,7 +370,7 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     list = list.filter(item => item.indexOf(baseDir) === -1);
 
-    if (!resetFlag) list.unshift(workDir, prefixDir);
+    if (!resetFlag) list.unshift(prefixDir);
 
     const env = {};
 
