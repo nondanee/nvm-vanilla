@@ -18,3 +18,9 @@ nvm exec <version> <command>
 nvm alias <name> <version>
 nvm unalias <name>
 ```
+
+### For Windows
+
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+```
