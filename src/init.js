@@ -16,14 +16,22 @@ const insert = async (profilePath, line) => {
 };
 
 const init = async () => {
-    if (process.env.PSModulePath) {
-        const profilePath = path.resolve(os.homedir(), 'Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1');
-        const line = 'nvm-vanilla --eval env | Out-String | Invoke-Expression';
-        await insert(profilePath, line);
-    } else {
-        const profilePath = path.resolve(os.homedir(), '.bashrc');
-        const line = 'eval "$(nvm-vanilla --eval env)"';
-        await insert(profilePath, line);
+    const profileList = [
+        'Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1',
+        '.bashrc',
+        '.zshrc',
+        // '.profile',
+    ];
+
+    let index = 0;
+    while (index < profileList.length) {
+        const profileName = profileList[index];
+        const profilePath = path.resolve(os.homedir(), profileName);
+        const line = /\.ps1$/.test(profileName)
+            ? 'nvm-vanilla --eval env | Out-String | Invoke-Expression'
+            : 'eval "$(nvm-vanilla --eval env)"';
+        await insert(profilePath, line).catch(() => {});
+        index += 1;
     }
 };
 
