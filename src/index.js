@@ -430,7 +430,7 @@ const use = async (baseDir, version, evalFlag = true) => {
             if (!process.env.SHELL) {
                 command = `$env:${key}="${value}"`;
             } else if (process.platform === 'win32') {
-                command
+                command = command
                     .replace(/([\w+]):\\/g, (_, $1) => '/' + $1.toLowerCase() + '/')
                     .replace(/\\/g, '/')
                     .replace(/;/g, ':');
