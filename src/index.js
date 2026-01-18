@@ -363,9 +363,10 @@ const use = async (baseDir, version, evalFlag = true) => {
                 ? `export ${key}=${value}`
                 : `export ${key}=\${${key}:-${value}}`;
 
+            // powershell
             if (process.platform === 'win32') {
                 command = (key === 'PATH' || true)
-                    ? `set ${key}=${value}`
+                    ? `$env:${key}="${value}"`
                     : `if not defined ${key} set ${key}=${value}`;
             }
 
