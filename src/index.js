@@ -389,7 +389,10 @@ const list = async (baseDir) => {
 
     let versionList = await Promise.all(nameList.map(async name => {
         const version = await getLocalNodeVersion(baseDir, name).catch(() => {});
-        if (!version) return;
+        if (!version) {
+            await uninstall(baseDir, version);
+            return;
+        }
         return 'node@' + name + ' (' + version + ')';
     }));
 
