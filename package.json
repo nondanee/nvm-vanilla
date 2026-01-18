@@ -8,7 +8,8 @@
   },
   "scripts": {
     "lint": "eslint src/**/*.js",
-    "postinstall": "node src/init.js"
+    "postinstall": "node src/init.js",
+    "postpublish": "git push --follow-tags"
   },
   "keywords": [],
   "author": "",
