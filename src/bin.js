@@ -41,7 +41,7 @@ const main = async () => {
         case 'env': {
             const content = await promisify(fs.readFile)(path.resolve(
                 __dirname,
-                process.platform == 'win32' ? 'nvm.ps1' : 'nvm.sh'
+                process.env.PSModulePath ? 'nvm.ps1' : 'nvm.sh'
             ), 'utf-8');
             process.stdout.write(content);
             break;
