@@ -5,7 +5,11 @@ const { promisify } = require('util');
 
 const pattern = /^.*nvm-vanilla.*$/m;
 
-const insert = async (profilePath, line) => {
+const insert = async (profilePath) => {
+    const line = /\.ps1$/.test(profilePath)
+        ? 'nvm-vanilla --eval env | Out-String | Invoke-Expression'
+        : 'eval "$(nvm-vanilla --eval env)"';
+
     let content = await promisify(fs.readFile)(profilePath, 'utf-8');
     if (pattern.test(content)) {
         content = content.replace(pattern, line);
@@ -27,10 +31,7 @@ const init = async () => {
     while (index < profileList.length) {
         const profileName = profileList[index];
         const profilePath = path.resolve(os.homedir(), profileName);
-        const line = /\.ps1$/.test(profileName)
-            ? 'nvm-vanilla --eval env | Out-String | Invoke-Expression'
-            : 'eval "$(nvm-vanilla --eval env)"';
-        await insert(profilePath, line).catch(() => {});
+        await insert(profilePath).catch(() => {});
         index += 1;
     }
 };
