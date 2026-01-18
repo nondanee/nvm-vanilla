@@ -1,5 +1,5 @@
 function nvm {
-    $result = nvm-vanilla --eval @args 2>$null
+    $result = nvm-vanilla --eval @args
     if ($result) {
         Invoke-Expression ($result -join ";")
     } else {
