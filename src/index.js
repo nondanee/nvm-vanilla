@@ -414,8 +414,8 @@ const use = async (baseDir, version, evalFlag = true) => {
 
     env.PATH = list.join(path.delimiter);
 
-    env.NPM_CONFIG_PREFIX = prefixDir;
-    env.NPM_CONFIG_CACHE = cacheDir;
+    env.NPM_CONFIG_PREFIX = resetFlag ? '' : prefixDir;
+    env.NPM_CONFIG_CACHE = resetFlag ? '' : cacheDir;
 
     // process.stderr.write('Now using node v' + version + '\n');
 
