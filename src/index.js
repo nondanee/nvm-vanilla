@@ -345,8 +345,8 @@ const uninstall = async (baseDir, version) => {
 
 const which = async (baseDir, name) => {
     const version = await getLocalNodeVersion(baseDir, name);
-    const workDir = path.join(baseDir, version, 'node_modules', '.bin');
-    return workDir;
+    const prefixDir = path.join(baseDir, version, 'prefix');
+    return prefixDir;
 };
 
 const use = async (baseDir, version, evalFlag = true) => {
