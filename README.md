@@ -1,6 +1,10 @@
-# NVM
+# NVM Vanilla
 
 ## Usage
+
+```
+npm i -g nvm-vanilla
+```
 
 ```
 nvm current
