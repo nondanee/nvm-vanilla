@@ -16,7 +16,7 @@ const insert = async (profilePath, line) => {
 };
 
 const init = async () => {
-    if (process.platform === 'win32') {
+    if (process.env.PSModulePath) {
         const profilePath = path.resolve(os.homedir(), 'Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1');
         const line = 'nvm-vanilla --eval env | Out-String | Invoke-Expression';
         await insert(profilePath, line);
