@@ -216,9 +216,9 @@ const getLocalNodeVersion = async (baseDir, name) => {
         packageData = await readJsonFile(packageFile).catch(() => { });
     }
     
-    if (packageData) {
+    try {
         return packageData.version.replace(/^v/, '');
-    } else {
+    } catch (_) {
         throw `no local node version "${name}"`;
     }
 };
