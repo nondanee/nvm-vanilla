@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 const { promisify } = require('util');
 const { spawnSync, execFile } = require('child_process');
-const { version } = require('../package.json');
+const { version: pkgVersion } = require('../package.json');
 
 const { init: install, use, list, detect, uninstall, alias, which } = require('./index');
 
@@ -47,7 +47,7 @@ const main = async () => {
 
     switch (command) {
         case '--version': {
-            console.log(version);
+            console.log(pkgVersion);
             break;
         }
         case 'env': {
